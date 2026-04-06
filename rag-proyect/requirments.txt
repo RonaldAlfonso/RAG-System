@@ -1,0 +1,13 @@
+# ── Web crawling ──────────────────────────────────────────────────────────────
+scrapy==2.11.2
+# scrapy-playwright==0.0.40   # Descomentar cuando actives Lonely Planet
+# playwright==1.44.0          # Descomentar cuando actives Lonely Planet
+
+# ── HTML parsing ──────────────────────────────────────────────────────────────
+beautifulsoup4==4.12.3
+lxml==5.2.2
+
+# ── Utilidades ────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1          # Variables de entorno
+tenacity==8.3.0               # Reintentos automáticos en requests fallidos
+boto3==1.34.100               # Cliente S3-compatible para Cloudflare R2
