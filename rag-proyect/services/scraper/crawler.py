@@ -71,7 +71,7 @@ def category_detection(texto:str) -> str:
         for keyword in keywords:
             if re.search(r'\b' + re.escape(keyword) + r'\b', texto_lower):
                 count[categoria] += 1
-    if not count:
+    if all(v == 0 for v in count.values()):
         return "general"
     return max(count, key=count.get)
 
