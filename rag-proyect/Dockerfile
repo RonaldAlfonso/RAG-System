@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Copia el código
-COPY crawler_turismo_latam.py .
+COPY . .
 
 
 CMD ["python", "crawler_turismo_latam.py"]

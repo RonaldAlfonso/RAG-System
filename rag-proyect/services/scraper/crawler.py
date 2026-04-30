@@ -40,18 +40,18 @@ CATEGORIAS = {
 }
 
 r2=boto3.client("s3",
-                endpoint_url=os.getenv("B2_ENDPOINT"),
-                aws_access_key_id=os.getenv("B2_KEY_ID"),
-                aws_secret_access_key=os.getenv("B2_APP_KEY"),
+                endpoint_url=os.getenv("R2_ENDPOINT_URL"),
+                aws_access_key_id=os.getenv("R2_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("R2_SECRET_ACCESS_KEY"),
                 region_name="auto")
 
-R2_BUCKET=os.getenv("B2_BUCKET_NAME","turismo-latam-raw")
+R2_BUCKET=os.getenv("R2_BUCKET_NAME","turismo-latam-raw")
 
 def r2_upload_file(file_name:str,content:str):
     try:
         r2.put_object(Bucket=R2_BUCKET, Key=f"raw/{file_name}", 
                       Body=content.encode("utf-8"),
-                      content_type="application/json")
+                      ContentType="application/json")
         return True
     except ClientError as e:
         print(f"Error uploading {file_name} to R2: {e}")

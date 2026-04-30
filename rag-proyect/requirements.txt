@@ -11,3 +11,6 @@ lxml==5.2.2
 python-dotenv==1.0.1          # Variables de entorno
 tenacity==8.3.0               # Reintentos automáticos en requests fallidos
 boto3==1.34.100               # Cliente S3-compatible para Cloudflare R2
+
+requests==2.32.3
+opensearch-py==2.6.0
