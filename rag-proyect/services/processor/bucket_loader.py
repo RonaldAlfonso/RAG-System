@@ -4,11 +4,11 @@ import json
 
 class BucketLoader:
     def __init__(self):
-        self.s3=boto3.client("s3",endpoint_url=os.getenv("B2_ENDPOINT"),
-                         aws_access_key_id=os.getenv("B2_KEY_ID"),
-                         aws_secret_access_key=os.getenv("B2_APP_KEY"),
-                         region_name="auto")
-        self.bucket=os.getenv("B2_BUCKET_NAME")
+        self.s3=boto3.client("s3", endpoint_url=os.getenv("R2_ENDPOINT_URL"),
+                aws_access_key_id=os.getenv("R2_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("R2_SECRET_ACCESS_KEY"),
+                region_name="auto")
+        self.bucket=os.getenv("R2_BUCKET_NAME")
 
     def list_files(self):
         paginator = self.s3.get_paginator('list_objects_v2')

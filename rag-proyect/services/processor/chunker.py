@@ -1,5 +1,5 @@
 def split_paragraph(text:str):
-    paragraph=[p.strip() for p in text.split("\n") if len(p.strip)>20]
+    paragraph=[p.strip() for p in text.split("\n") if len(p.strip())>20]
     return paragraph
 
 def chunk_documents(doc,chunk_size=500,overlap=100):
@@ -25,7 +25,7 @@ def chunk_documents(doc,chunk_size=500,overlap=100):
                         "chunk_end": sub_start + chunk_size
                     }
                 })
-                sub_start=chunk_size-overlap
+                sub_start+=chunk_size-overlap
             continue
         if len(current_chunk)+len(para)<=chunk_size:
             current_chunk+=" "+para
