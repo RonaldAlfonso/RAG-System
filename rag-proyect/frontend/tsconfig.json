@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM"],
+    "baseUrl": ".",
+    "paths": {
+      "src/*":         ["./src/*"],
+      "layouts/*":     ["./src/layouts/*"],
+      "pages/*":       ["./src/pages/*"],
+      "components/*":  ["./src/components/*"],
+      "composables/*": ["./src/composables/*"],
+      "router/*":      ["./src/router/*"]
+    },
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
