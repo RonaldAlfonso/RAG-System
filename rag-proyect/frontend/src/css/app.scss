@@ -1,0 +1,18 @@
+.chat-wrap {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 50px);
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.ellipsis-3-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
