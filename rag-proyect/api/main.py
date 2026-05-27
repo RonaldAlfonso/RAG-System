@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 from retrival.rag_pipeline import ask
-from retrival.retriever import hybrid_search, format_context
+from retrival.retrieve_with_fallback import retrieve_context_with_fallback
 from retrival.country_detector import detect_country
 from llm.ollama_client import generate_stream
 
@@ -49,6 +49,11 @@ class AskResponse(BaseModel):
     detected_country: Optional[str]
     filters_applied: dict
     sources: list[Source]
+    web_fallback_attempted: bool
+    web_fallback_used: bool
+    web_docs_received: int
+    web_chunks_indexed: int
+    web_pages: list[dict]
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
@@ -75,18 +80,27 @@ def ask_stream(body: AskRequest):
         active_filters["pais"] = detected_country
 
     try:
-        results = hybrid_search(body.query, top_k=body.top_k, filters=active_filters or None)
+        retrieval = retrieve_context_with_fallback(
+            query=body.query,
+            top_k=body.top_k,
+            filters=active_filters or None,
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    context = format_context(results)
+    results = retrieval["results"]
+    context = retrieval["context"]
 
     def event_stream():
-        # Primero enviamos metadatos y fuentes
         meta = {
             "type": "meta",
             "detected_country": detected_country,
             "filters_applied": active_filters,
+            "web_fallback_attempted": retrieval.get("web_fallback_attempted", False),
+            "web_fallback_used":      retrieval.get("web_fallback_used", False),
+            "web_docs_received":      retrieval.get("web_docs_received", 0),
+            "web_chunks_indexed":     retrieval.get("web_chunks_indexed", 0),
+            "web_pages":              retrieval.get("web_pages", []),
             "sources": [
                 {
                     "score":    r["score"],
@@ -100,7 +114,6 @@ def ask_stream(body: AskRequest):
         }
         yield f"data: {json.dumps(meta, ensure_ascii=False)}\n\n"
 
-        # Luego los tokens del LLM conforme llegan
         for token in generate_stream(query=body.query, context=context):
             yield f"data: {json.dumps({'type': 'token', 'content': token}, ensure_ascii=False)}\n\n"
 
