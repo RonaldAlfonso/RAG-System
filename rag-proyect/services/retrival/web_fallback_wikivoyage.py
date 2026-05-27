@@ -7,8 +7,9 @@ from urllib.parse import quote_plus, urljoin
 import requests
 from bs4 import BeautifulSoup
 from bs4.exceptions import FeatureNotFound
+from retrival.country_detector import detect_country
 
-BASE_URL = "https://en.wikivoyage.org"
+BASE_URL = "https://es.wikivoyage.org"
 
 
 def _make_soup(html: str) -> BeautifulSoup:
@@ -103,10 +104,7 @@ def _extract_page_text(page_html: str) -> Tuple[str, str]:
 
 
 def fetch_wikivoyage_pages(query: str, max_pages: int, timeout_seconds: int) -> list[dict]:
-    """Busca páginas en Wikivoyage y retorna documentos normalizados.
-
-    En caso de error, retorna una lista vacía.
-    """
+    """Busca páginas en Wikivoyage y retorna documentos normalizados."""
     try:
         q = (query or "").strip()
         if not q:
@@ -130,6 +128,10 @@ def fetch_wikivoyage_pages(query: str, max_pages: int, timeout_seconds: int) -> 
             title, text = _extract_page_text(page_html)
             if not text:
                 continue
+
+            sample_for_detection = f"{title} {text[:2000]}"
+            detected_country = detect_country(sample_for_detection)
+
             docs.append(
                 {
                     "text": text,
@@ -137,6 +139,7 @@ def fetch_wikivoyage_pages(query: str, max_pages: int, timeout_seconds: int) -> 
                         "title": title,
                         "url": url,
                         "source": "wikivoyage",
+                        "pais": detected_country,
                     },
                 }
             )

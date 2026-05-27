@@ -17,6 +17,7 @@ def retrieve_context_with_fallback(
     from retrival.retriever import hybrid_search, format_context
     from retrival.web_fallback_wikivoyage import fetch_wikivoyage_pages
     from retrival.web_ingest import ingest_web_documents
+    from retrival.domain_classifier import classify_query_domain
     from retrival.fallback_policy import (
         WEB_FALLBACK_ENABLED,
         WEB_FALLBACK_MAX_PAGES,
@@ -37,6 +38,10 @@ def retrieve_context_with_fallback(
             "web_docs_received": 0,
             "web_chunks_indexed": 0,
             "web_pages": [],
+            "domain_gate_checked": False,
+            "domain_gate_in_domain": True,
+            "domain_gate_confidence": None,
+            "domain_gate_reason": None,
         }
 
     if not insufficient:
@@ -48,6 +53,26 @@ def retrieve_context_with_fallback(
             "web_docs_received": 0,
             "web_chunks_indexed": 0,
             "web_pages": [],
+            "domain_gate_checked": False,
+            "domain_gate_in_domain": True,
+            "domain_gate_confidence": None,
+            "domain_gate_reason": None,
+        }
+
+    domain = classify_query_domain(query)
+    if domain.get("checked") and domain.get("in_domain") is False:
+        return {
+            "results": results_1,
+            "context": context_1,
+            "web_fallback_attempted": True,
+            "web_fallback_used": False,
+            "web_docs_received": 0,
+            "web_chunks_indexed": 0,
+            "web_pages": [],
+            "domain_gate_checked": True,
+            "domain_gate_in_domain": False,
+            "domain_gate_confidence": domain.get("confidence"),
+            "domain_gate_reason": domain.get("reason"),
         }
 
     docs = fetch_wikivoyage_pages(
@@ -65,6 +90,10 @@ def retrieve_context_with_fallback(
             "web_docs_received": 0,
             "web_chunks_indexed": 0,
             "web_pages": [],
+            "domain_gate_checked": bool(domain.get("checked", False)),
+            "domain_gate_in_domain": bool(domain.get("in_domain", True)),
+            "domain_gate_confidence": domain.get("confidence"),
+            "domain_gate_reason": domain.get("reason"),
         }
 
     stats = ingest_web_documents(docs)
@@ -79,4 +108,8 @@ def retrieve_context_with_fallback(
         "web_docs_received": int(stats.get("docs_received", 0) or 0),
         "web_chunks_indexed": int(stats.get("chunks_indexed", 0) or 0),
         "web_pages": [doc.get("metadata", {}) for doc in docs],
+        "domain_gate_checked": bool(domain.get("checked", False)),
+        "domain_gate_in_domain": bool(domain.get("in_domain", True)),
+        "domain_gate_confidence": domain.get("confidence"),
+        "domain_gate_reason": domain.get("reason"),
     }

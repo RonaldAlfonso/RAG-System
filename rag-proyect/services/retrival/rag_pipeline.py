@@ -34,6 +34,10 @@ def ask(query: str, top_k: int = 5, filters: dict = None) -> dict:
         "web_docs_received":      retrieval.get("web_docs_received", 0),
         "web_chunks_indexed":     retrieval.get("web_chunks_indexed", 0),
         "web_pages":              retrieval.get("web_pages", []),
+        "domain_gate_checked":     retrieval.get("domain_gate_checked", False),
+        "domain_gate_in_domain":   retrieval.get("domain_gate_in_domain", True),
+        "domain_gate_confidence":  retrieval.get("domain_gate_confidence"),
+        "domain_gate_reason":      retrieval.get("domain_gate_reason"),
     }
 
 
