@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, "/app/services")
 
-from retrival.retriever import hybrid_search, format_context
+from retrival.retrieve_with_fallback import retrieve_context_with_fallback
 from retrival.country_detector import detect_country
 from llm.ollama_client import generate
 
@@ -13,8 +13,13 @@ def ask(query: str, top_k: int = 5, filters: dict = None) -> dict:
     if detected_country and "pais" not in active_filters:
         active_filters["pais"] = detected_country
 
-    results = hybrid_search(query, top_k=top_k, filters=active_filters or None)
-    context = format_context(results)
+    retrieval = retrieve_context_with_fallback(
+        query=query,
+        top_k=top_k,
+        filters=active_filters or None,
+    )
+    results = retrieval["results"]
+    context = retrieval["context"]
     answer = generate(query=query, context=context)
 
     return {
@@ -24,6 +29,11 @@ def ask(query: str, top_k: int = 5, filters: dict = None) -> dict:
         "context":          context,
         "detected_country": detected_country,
         "filters_applied":  active_filters,
+        "web_fallback_attempted": retrieval.get("web_fallback_attempted", False),
+        "web_fallback_used":      retrieval.get("web_fallback_used", False),
+        "web_docs_received":      retrieval.get("web_docs_received", 0),
+        "web_chunks_indexed":     retrieval.get("web_chunks_indexed", 0),
+        "web_pages":              retrieval.get("web_pages", []),
     }
 
 
@@ -45,3 +55,4 @@ if __name__ == "__main__":
         url   = s["metadata"].get("url", "")
         score = s["score"]
         print(f"  {i}. [{score:.4f}] {title} {url}")
+
