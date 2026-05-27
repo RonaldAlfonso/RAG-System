@@ -54,6 +54,10 @@ class AskResponse(BaseModel):
     web_docs_received: int
     web_chunks_indexed: int
     web_pages: list[dict]
+    domain_gate_checked: bool
+    domain_gate_in_domain: bool
+    domain_gate_confidence: Optional[float] = None
+    domain_gate_reason: Optional[str] = None
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
@@ -101,6 +105,10 @@ def ask_stream(body: AskRequest):
             "web_docs_received":      retrieval.get("web_docs_received", 0),
             "web_chunks_indexed":     retrieval.get("web_chunks_indexed", 0),
             "web_pages":              retrieval.get("web_pages", []),
+            "domain_gate_checked":    retrieval.get("domain_gate_checked", False),
+            "domain_gate_in_domain":  retrieval.get("domain_gate_in_domain", True),
+            "domain_gate_confidence": retrieval.get("domain_gate_confidence", None),
+            "domain_gate_reason":     retrieval.get("domain_gate_reason", None),
             "sources": [
                 {
                     "score":    r["score"],

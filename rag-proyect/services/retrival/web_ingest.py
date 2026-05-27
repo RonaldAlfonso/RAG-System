@@ -16,6 +16,11 @@ def ingest_web_documents(docs: List[dict]) -> Dict[str, int]:
     all_chunks: List[dict] = []
 
     for doc in docs:
+        metadata = doc.get("metadata", {})
+        if metadata.get("pais") is None:
+            metadata.pop("pais", None)
+        doc["metadata"] = metadata
+
         chunks = chunk_documents(doc)
 
         for i, chunk in enumerate(chunks):
