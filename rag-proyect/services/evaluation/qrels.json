@@ -1,0 +1,152 @@
+[
+  {
+    "query_id": 1,
+    "query_text": "mejores playas de Brasil",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 2,
+    "query_text": "itinerario 3 días en Cusco Perú",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 3,
+    "query_text": "presupuesto para viajar a Colombia",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 4,
+    "query_text": "qué hacer en Ciudad de México",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 5,
+    "query_text": "lugares turísticos de Argentina",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 6,
+    "query_text": "gastronomía típica de Perú",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 7,
+    "query_text": "ruinas mayas de Guatemala",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 8,
+    "query_text": "trekking en Patagonia Chile",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 9,
+    "query_text": "playas del Caribe colombiano",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 10,
+    "query_text": "volcanes y naturaleza Costa Rica",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 11,
+    "query_text": "cómo llegar a Machu Picchu",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 12,
+    "query_text": "islas Galápagos Ecuador turismo",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 13,
+    "query_text": "qué visitar en Buenos Aires",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 14,
+    "query_text": "salar de Uyuni Bolivia viaje",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 15,
+    "query_text": "La Habana Cuba turismo qué ver",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 16,
+    "query_text": "ecoturismo en el Amazonas Brasil",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 17,
+    "query_text": "Bogotá Colombia turismo atracciones",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 18,
+    "query_text": "Medellín Colombia qué hacer",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 19,
+    "query_text": "hotel económico en Lima Perú",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 20,
+    "query_text": "Cartagena de Indias Colombia playas historia",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 21,
+    "query_text": "Tikal Guatemala ruinas mayas selva",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 22,
+    "query_text": "lago Titicaca Bolivia Perú",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 23,
+    "query_text": "Valparaíso Chile arte cultura",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 24,
+    "query_text": "cataratas del Iguazú Argentina",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 25,
+    "query_text": "Montevideo Uruguay turismo",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 26,
+    "query_text": "San José Costa Rica qué hacer",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 27,
+    "query_text": "Ciudad de Panamá turismo Canal",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 28,
+    "query_text": "Oaxaca México gastronomía cultura",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 29,
+    "query_text": "surf y playas Nicaragua",
+    "relevant_chunks": []
+  },
+  {
+    "query_id": 30,
+    "query_text": "desierto de Atacama Chile",
+    "relevant_chunks": []
+  }
+]

@@ -1,0 +1,3 @@
+# Este archivo existe solo para que git rastree el directorio results/.
+# Los archivos generados por run_evaluation.py (ranked_lists.json,
+# report_*.txt, metrics_*.json) se almacenan aquí y están en .gitignore.
