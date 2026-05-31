@@ -58,6 +58,11 @@ class AskResponse(BaseModel):
     domain_gate_in_domain: bool
     domain_gate_confidence: Optional[float] = None
     domain_gate_reason: Optional[str] = None
+    expansion_used: bool = False
+    prf_used: bool = False
+    original_query: Optional[str] = None
+    expanded_query_semantic: Optional[str] = None
+    prf_expanded_query: Optional[str] = None
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
@@ -119,6 +124,11 @@ def ask_stream(body: AskRequest):
                 }
                 for r in results
             ],
+            "expansion_used":          retrieval.get("expansion_used", False),
+            "prf_used":                retrieval.get("prf_used", False),
+            "original_query":          retrieval.get("original_query", body.query),
+            "expanded_query_semantic": retrieval.get("expanded_query_semantic"),
+            "prf_expanded_query":      retrieval.get("prf_expanded_query"),
         }
         yield f"data: {json.dumps(meta, ensure_ascii=False)}\n\n"
 

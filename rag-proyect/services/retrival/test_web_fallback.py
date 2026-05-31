@@ -54,7 +54,7 @@ def test_wikivoyage_parser_offline() -> None:
     from retrival.web_fallback_wikivoyage import _build_search_url, _extract_result_urls
 
     url = _build_search_url("Cusco Perú")
-    assert url.startswith("https://en.wikivoyage.org/w/index.php?search=")
+    assert url.startswith("https://es.wikivoyage.org/w/index.php?search=")
     assert "title=Special:Search" in url
     assert "fulltext=1" in url
     assert "Cusco" in url
@@ -69,8 +69,8 @@ def test_wikivoyage_parser_offline() -> None:
     </body></html>
     """
     urls = _extract_result_urls(html, max_pages=10)
-    assert "https://en.wikivoyage.org/wiki/Cusco" in urls
-    assert "https://en.wikivoyage.org/wiki/Lima" in urls
+    assert "https://es.wikivoyage.org/wiki/Cusco" in urls
+    assert "https://es.wikivoyage.org/wiki/Lima" in urls
     assert all("Special:Search" not in u for u in urls)
 
 
