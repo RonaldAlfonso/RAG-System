@@ -38,6 +38,11 @@ def ask(query: str, top_k: int = 5, filters: dict = None) -> dict:
         "domain_gate_in_domain":   retrieval.get("domain_gate_in_domain", True),
         "domain_gate_confidence":  retrieval.get("domain_gate_confidence"),
         "domain_gate_reason":      retrieval.get("domain_gate_reason"),
+        "expansion_used":          retrieval.get("expansion_used", False),
+        "prf_used":                retrieval.get("prf_used", False),
+        "original_query":          retrieval.get("original_query", query),
+        "expanded_query_semantic": retrieval.get("expanded_query_semantic"),
+        "prf_expanded_query":      retrieval.get("prf_expanded_query"),
     }
 
 
@@ -60,3 +65,9 @@ if __name__ == "__main__":
         score = s["score"]
         print(f"  {i}. [{score:.4f}] {title} {url}")
 
+    if response.get("expansion_used") or response.get("prf_used"):
+        print("\n🔧 Expansión aplicada:")
+        if response.get("expansion_used"):
+            print(f"   Expansión semántica: {response.get('expanded_query_semantic')}")
+        if response.get("prf_used"):
+            print(f"   PRF: {response.get('prf_expanded_query')}")
