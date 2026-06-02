@@ -17,7 +17,7 @@ def create_hybrid_pipeline(pipeline_id: str = "hybrid-pipeline"):
                     "combination": {
                         "technique": "arithmetic_mean",
                         "parameters": {
-                            "weights": [0.2, 0.8]   # [BM25, KNN] — semántico pesa más
+                            "weights": [0.3, 0.7]   # [BM25, KNN] — semántico pesa más
                         }
                     }
                 }

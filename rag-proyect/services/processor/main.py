@@ -1,10 +1,25 @@
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from bucket_loader import BucketLoader
 from chunker import chunk_documents
 from processor.vector_store import create_index
 from processor.indexer import index_chunks_batch, BATCH_SIZE
+from retrival.country_detector import detect_country
+
+def _fix_pais(metadata: dict) -> dict:
+    """Sobreescribe metadata.pais detectando el país desde el título (más confiable que el B2)."""
+    title = metadata.get("title", "")
+    url   = metadata.get("url", "")
+    detected = detect_country(title) or detect_country(url)
+    if detected:
+        metadata["pais"] = detected
+    return metadata
 
 def process():
     create_index()
+    create_index("web_cache")
     loader = BucketLoader()
     print("🚀 Iniciando pipeline RAG\n")
 
@@ -26,6 +41,7 @@ def process():
             continue
 
         total_docs += 1
+        doc["metadata"] = _fix_pais(doc["metadata"])
         chunks = chunk_documents(doc)
 
         # Añadir índice de posición a cada chunk

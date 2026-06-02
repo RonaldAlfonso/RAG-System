@@ -134,7 +134,7 @@ def bootstrap(
 
 
 def main() -> None:
-    default_model = os.getenv("LLM_MODEL", "qwen2.5:3b")
+    default_model = os.getenv("MISTRAL_MODEL") or os.getenv("LLM_MODEL", "qwen2.5:3b")
     default_qrels = os.path.join(os.path.dirname(os.path.abspath(__file__)), "qrels.json")
 
     parser = argparse.ArgumentParser(
@@ -145,8 +145,10 @@ def main() -> None:
         help=f"Ruta al archivo qrels.json (default: {default_qrels})"
     )
     parser.add_argument(
-        "--top-k", type=int, default=20,
-        help="Número de chunks candidatos a evaluar por consulta (default: 20)"
+        "--top-k", type=int, default=50,
+        help="Número de chunks candidatos a evaluar por consulta (default: 50). "
+             "Debe ser mayor que el top-k máximo usado en la evaluación para evitar "
+             "que Recall@k sea trivialmente 1.0 por construcción."
     )
     parser.add_argument(
         "--model", type=str, default=default_model,

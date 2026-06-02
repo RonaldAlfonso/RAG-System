@@ -6,6 +6,7 @@ from processor.embeddigns import get_embeddings_batch
 from processor.vector_store import client
 
 INDEX_NAME = "documents"
+WEB_CACHE_INDEX_NAME = "web_cache"
 BATCH_SIZE = 16  # ajusta según RAM de Ollama; 16-64 es razonable
 
 def _make_chunk_id(text: str) -> str:
@@ -17,12 +18,12 @@ def _make_doc_id(metadata: dict) -> str:
     key = metadata.get("url") or metadata.get("title") or "unknown"
     return hashlib.sha256(key.encode()).hexdigest()
 
-def _build_action(chunk: dict, embedding: List[float]) -> dict:
+def _build_action(chunk: dict, embedding: List[float], index_name: str = INDEX_NAME) -> dict:
     """Construye una acción para el bulk API de OpenSearch."""
     chunk_id = _make_chunk_id(chunk["text"])
     return {
         "_op_type": "index",          # usa "update" si quieres upsert parcial
-        "_index": INDEX_NAME,
+        "_index": index_name,
         "_id": chunk_id,              # OpenSearch usa esto como _id → dedup automático
         "_source": {
             "chunk_id":    chunk_id,
@@ -38,32 +39,35 @@ def _build_action(chunk: dict, embedding: List[float]) -> dict:
         }
     }
 
-def index_chunks_batch(chunks: List[dict]):
+def index_chunks_batch(chunks: List[dict], index_name: str = INDEX_NAME):
     """
-    Recibe una lista de chunks, llama a Ollama una sola vez
-    y escribe todo en OpenSearch con el bulk API.
+    Recibe una lista de chunks y los indexa en OpenSearch.
+    Las llamadas a Ollama se hacen en sub-lotes de BATCH_SIZE para
+    evitar timeouts cuando el lote total es grande.
     """
     if not chunks:
-        return
+        return True
 
-    texts = [c["text"] for c in chunks]
-    embeddings = get_embeddings_batch(texts)
-
-    actions = [
-        _build_action(chunk, emb)
-        for chunk, emb in zip(chunks, embeddings)
-    ]
+    all_actions = []
+    for i in range(0, len(chunks), BATCH_SIZE):
+        sub = chunks[i:i + BATCH_SIZE]
+        texts = [c["text"] for c in sub]
+        embeddings = get_embeddings_batch(texts)
+        all_actions.extend(
+            _build_action(chunk, emb, index_name)
+            for chunk, emb in zip(sub, embeddings)
+        )
 
     success, errors = helpers.bulk(
         client,
-        actions,
+        all_actions,
         raise_on_error=False,
         stats_only=False
     )
 
     if errors:
         print(f"   ⚠️  {len(errors)} errores en bulk indexing:")
-        for e in errors[:3]:  # muestra solo los primeros 3
+        for e in errors[:3]:
             print(f"      {e}")
 
     return success

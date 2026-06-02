@@ -94,16 +94,17 @@ def generate_report(
     all_metrics: List[Dict[str, Any]],
     aggregated: Dict[str, Any],
     top_k_list: List[int],
+    mode: str = "baseline",
     output_dir: str = "evaluation/reports"
 ) -> str:
     """
-    Genera un informe completo y lo guarda en un archivo con timestamp.
+    Genera un informe completo y lo guarda en un archivo con timestamp y modo.
     Retorna la ruta del archivo generado.
     """
     os.makedirs(output_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    report_path = os.path.join(output_dir, f"report_{timestamp}.txt")
-    json_path = os.path.join(output_dir, f"metrics_{timestamp}.json")
+    report_path = os.path.join(output_dir, f"report_{mode}_{timestamp}.txt")
+    json_path = os.path.join(output_dir, f"metrics_{mode}_{timestamp}.json")
 
     # Guardar métricas detalladas por consulta
     with open(json_path, 'w', encoding='utf-8') as f:
@@ -112,6 +113,7 @@ def generate_report(
     # Generar informe texto
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write("=== INFORME DE EVALUACIÓN DEL SISTEMA RAG ===\n")
+        f.write(f"Modo: {mode}\n")
         f.write(f"Fecha: {datetime.now().isoformat()}\n\n")
         f.write(to_text_table(aggregated, top_k_list))
         f.write("\n\n=== Métricas detalladas por consulta ===\n")
