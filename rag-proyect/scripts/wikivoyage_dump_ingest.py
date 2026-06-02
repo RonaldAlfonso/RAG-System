@@ -5,9 +5,6 @@ y el Caribe, y los indexa en la KB principal (índice 'documents').
 
 Ejecutar dentro del contenedor processor:
     docker exec -it processor_rag python scripts/wikivoyage_dump_ingest.py
-
-O localmente con PYTHONPATH apuntando a services/:
-    PYTHONPATH=/app/services python scripts/wikivoyage_dump_ingest.py
 """
 
 import sys
@@ -38,10 +35,9 @@ DUMP_URL  = "https://dumps.wikimedia.org/eswikivoyage/latest/eswikivoyage-latest
 DUMP_PATH = Path("/tmp/eswikivoyage-latest.xml.bz2")
 BASE_URL  = "https://es.wikivoyage.org/wiki/"
 
-# Artículos acumulados antes de hacer una llamada bulk al indexer
 BATCH_SIZE = 40
 
-# ── Países LATAM + Caribe (nombre Wikivoyage → valor para metadata.pais) ──────
+# ── Países LATAM + Caribe ─────────────────────────────────────────────────────
 
 LATAM_COUNTRIES: dict[str, str] = {
     "México":                       "Mexico",
@@ -92,18 +88,76 @@ LATAM_COUNTRIES: dict[str, str] = {
     "Guayana Francesa":             "Guayana Francesa",
 }
 
-# Palabras clave que marcan regiones LATAM (para artículos de ciudades/destinos
-# cuyos títulos no son el nombre del país directamente)
+# Palabras clave de regiones LATAM (para categorías y títulos)
 _REGION_KEYWORDS = {
     kw.lower() for kw in [
         "Caribe", "América Central", "Centroamérica",
         "América del Sur", "Sudamérica", "América Latina", "Latinoamérica",
-        "Antillas", "Indias Occidentales",
+        "Antillas", "Indias Occidentales", "Centroamérica y el Caribe",
     ]
 }
 
-# Conjunto de nombres de países (lower) para búsqueda rápida en categorías
+# Países en minúsculas para búsqueda rápida
 _COUNTRY_LOWER: dict[str, str] = {k.lower(): v for k, v in LATAM_COUNTRIES.items()}
+
+# ── Patrones de texto para detectar país en los primeros párrafos ─────────────
+# Cada tupla: (regex compilado, código_pais)
+# Se busca en los primeros TEXT_SCAN_CHARS del wikitext crudo.
+TEXT_SCAN_CHARS = 1200
+
+_TEXT_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (re.compile(r'\bMéxico\b|\bMexico\b'),            "Mexico"),
+    (re.compile(r'\bGuatemala\b'),                     "Guatemala"),
+    (re.compile(r'\bBelice\b'),                        "Belice"),
+    (re.compile(r'\bHonduras\b'),                      "Honduras"),
+    (re.compile(r'\bEl Salvador\b'),                   "El Salvador"),
+    (re.compile(r'\bNicaragua\b'),                     "Nicaragua"),
+    (re.compile(r'\bCosta Rica\b'),                    "Costa Rica"),
+    (re.compile(r'\bPanamá\b|\bPanama\b'),             "Panama"),
+    (re.compile(r'\bCuba\b'),                          "Cuba"),
+    (re.compile(r'\bRepública Dominicana\b'),          "Republica Dominicana"),
+    (re.compile(r'\bHaití\b|\bHaiti\b'),               "Haiti"),
+    (re.compile(r'\bPuerto Rico\b'),                   "Puerto Rico"),
+    (re.compile(r'\bJamaica\b'),                       "Jamaica"),
+    (re.compile(r'\bTrinidad y Tobago\b'),             "Trinidad y Tobago"),
+    (re.compile(r'\bBarbados\b'),                      "Barbados"),
+    (re.compile(r'\bBahamas\b'),                       "Bahamas"),
+    (re.compile(r'\bAruba\b'),                         "Aruba"),
+    (re.compile(r'\bCurazao\b|\bCuraçao\b'),           "Curacao"),
+    (re.compile(r'\bColombia\b'),                      "Colombia"),
+    (re.compile(r'\bVenezuela\b'),                     "Venezuela"),
+    (re.compile(r'\bEcuador\b'),                       "Ecuador"),
+    (re.compile(r'\bPerú\b|\bPeru\b'),                 "Peru"),
+    (re.compile(r'\bBolivia\b'),                       "Bolivia"),
+    (re.compile(r'\bChile\b'),                         "Chile"),
+    (re.compile(r'\bArgentina\b'),                     "Argentina"),
+    (re.compile(r'\bUruguay\b'),                       "Uruguay"),
+    (re.compile(r'\bParaguay\b'),                      "Paraguay"),
+    (re.compile(r'\bBrasil\b|\bBrazil\b'),             "Brasil"),
+    (re.compile(r'\bGuyana\b'),                        "Guyana"),
+    (re.compile(r'\bSurinam\b|\bSuriname\b'),          "Surinam"),
+    (re.compile(r'\bGuayana Francesa\b'),              "Guayana Francesa"),
+    (re.compile(r'\bCaribe\b|\bCaribeño\b', re.I),    "Caribe"),
+    (re.compile(r'\bAmérica Central\b|Centroamérica\b', re.I), "America Central"),
+    (re.compile(r'\bAmérica del Sur\b|Sudamérica\b',  re.I),   "America del Sur"),
+]
+
+# Artículos claramente fuera de LATAM — se excluyen aunque mencionen un país LATAM
+# (por ejemplo: "Berlín" podría mencionar "Argentina" de pasada)
+_BLOCKLIST_CATS = {
+    "europa", "españa", "alemania", "francia", "italia", "portugal",
+    "reino unido", "asia", "japón", "china", "india", "africa", "áfrica",
+    "oceanía", "australia", "oriente medio", "estados unidos", "canadá",
+    "dinamarca", "noruega", "suecia", "finlandia", "países bajos",
+    "bélgica", "austria", "suiza", "grecia", "turquía", "rusia",
+    "polonia", "hungría", "república checa", "eslovaquia", "rumanía",
+    "bulgaria", "croacia", "serbia", "eslovenia",
+    "marruecos", "egipto", "kenia", "sudáfrica", "etiopía", "tanzania",
+    "tailandia", "vietnam", "indonesia", "filipinas", "malasia",
+    "singapur", "corea del sur", "corea del norte",
+    "new zealand", "nueva zelanda",
+    "canarias", "mallorca", "ibiza",  # España
+}
 
 # ── Limpieza de wikitext ───────────────────────────────────────────────────────
 
@@ -119,7 +173,6 @@ _RE_MULTIBLANKS = re.compile(r"\n{3,}")
 
 def wikitext_to_plain(wikitext: str) -> str:
     text = wikitext
-    # Eliminar templates anidados (múltiples pasadas hasta convergencia)
     prev = None
     while prev != text:
         prev = text
@@ -148,59 +201,55 @@ def iter_pages(dump_path: Path) -> Iterator[tuple[str, str]]:
     with bz2.open(dump_path, "rb") as fh:
         ns_prefix = ""
         context = ET.iterparse(fh, events=("start", "end"))
-
         for event, elem in context:
-            # Detectar namespace del XML en el primer elemento raíz
             if event == "start" and not ns_prefix and elem.tag.startswith("{"):
                 ns_prefix = elem.tag.split("}")[0] + "}"
                 continue
-
             if event != "end":
                 continue
-
             local = elem.tag.replace(ns_prefix, "")
-
             if local != "page":
                 continue
-
             ns_tag    = elem.find(f"{ns_prefix}ns")
             title_tag = elem.find(f"{ns_prefix}title")
             rev       = elem.find(f"{ns_prefix}revision")
             text_tag  = rev.find(f"{ns_prefix}text") if rev is not None else None
-
             ns_val = ns_tag.text if ns_tag is not None else "-1"
             title  = title_tag.text if title_tag is not None else ""
             text   = text_tag.text  if text_tag  is not None else ""
-
-            elem.clear()  # liberar memoria inmediatamente
-
+            elem.clear()
             if ns_val != "0":
                 continue
             if not text or text.strip().upper().startswith("#REDIRECT"):
                 continue
-
             yield title, text
 
 
 # ── Detección de país LATAM ────────────────────────────────────────────────────
 
-def detect_pais(title: str, categories: list[str]) -> Optional[str]:
+def detect_pais(title: str, categories: list[str], wikitext: str) -> Optional[str]:
     """
     Devuelve el código de país si el artículo pertenece a LATAM/Caribe.
-    Retorna None si no es relevante.
+    Usa tres niveles: título → categorías → primeros párrafos del texto.
     """
-    # 1. Título es exactamente el nombre de un país
+    # 0. Excluir artículos claramente no-LATAM por sus categorías
+    cats_lower = [c.lower() for c in categories]
+    for cat_low in cats_lower:
+        for blocked in _BLOCKLIST_CATS:
+            if blocked in cat_low:
+                return None
+
+    # 1. Título es exactamente un país LATAM
     if title in LATAM_COUNTRIES:
         return LATAM_COUNTRIES[title]
 
-    # 2. Una categoría contiene el nombre de un país LATAM
-    cats_lower = [c.lower() for c in categories]
+    # 2. Categorías contienen el nombre de un país LATAM
     for cat_low in cats_lower:
         for country_low, country_code in _COUNTRY_LOWER.items():
             if country_low in cat_low:
                 return country_code
 
-    # 3. Título o categorías mencionan una región LATAM genérica
+    # 3. Título o categorías contienen una región LATAM genérica
     title_low = title.lower()
     for kw in _REGION_KEYWORDS:
         if kw in title_low:
@@ -209,6 +258,13 @@ def detect_pais(title: str, categories: list[str]) -> Optional[str]:
         for kw in _REGION_KEYWORDS:
             if kw in cat_low:
                 return kw.capitalize()
+
+    # 4. Escanear los primeros párrafos del wikitext en busca del país
+    #    (Wikivoyage siempre nombra el país en la intro del artículo)
+    excerpt = wikitext[:TEXT_SCAN_CHARS]
+    for pattern, country_code in _TEXT_PATTERNS:
+        if pattern.search(excerpt):
+            return country_code
 
     return None
 
@@ -220,9 +276,7 @@ def download_dump() -> None:
         size_mb = DUMP_PATH.stat().st_size / 1e6
         log.info("Dump ya existe en %s (%.1f MB), omitiendo descarga.", DUMP_PATH, size_mb)
         return
-
-    log.info("Descargando dump de Wikivoyage ES…")
-    log.info("  URL: %s", DUMP_URL)
+    log.info("Descargando dump de Wikivoyage ES desde %s …", DUMP_URL)
 
     def _progress(block_num: int, block_size: int, total_size: int) -> None:
         if block_num % 200 == 0:
@@ -230,8 +284,6 @@ def download_dump() -> None:
             if total_size > 0:
                 pct = min(downloaded / total_size * 100, 100)
                 log.info("  %.1f%% (%.1f MB / %.1f MB)", pct, downloaded / 1e6, total_size / 1e6)
-            else:
-                log.info("  %.1f MB descargados", downloaded / 1e6)
 
     urllib.request.urlretrieve(DUMP_URL, DUMP_PATH, reporthook=_progress)
     log.info("Descarga completa: %s (%.1f MB)", DUMP_PATH, DUMP_PATH.stat().st_size / 1e6)
@@ -254,21 +306,21 @@ def process_dump() -> None:
         ok = index_chunks_batch(batch_chunks, index_name="documents")
         total_chunks += len(batch_chunks)
         status = "OK" if ok else "ERROR"
-        log.info("  [%s] %d chunks indexados (total artículos: %d, total chunks: %d)",
+        log.info("  [%s] %d chunks (acum. artículos=%d, chunks=%d)",
                  status, len(batch_chunks), total_articles, total_chunks)
         batch_chunks.clear()
 
     log.info("Procesando dump…")
     for title, wikitext in iter_pages(DUMP_PATH):
         categories = _get_categories(wikitext)
-        pais = detect_pais(title, categories)
+        pais = detect_pais(title, categories, wikitext)
 
         if pais is None:
             skipped += 1
             continue
 
         plain = wikitext_to_plain(wikitext)
-        if len(plain) < 150:  # artículos demasiado cortos (stubs)
+        if len(plain) < 150:
             skipped += 1
             continue
 
@@ -288,8 +340,8 @@ def process_dump() -> None:
         batch_chunks.extend(doc_chunks)
         total_articles += 1
 
-        if total_articles % 10 == 0:
-            log.info("Artículos LATAM procesados: %d (descartados: %d)", total_articles, skipped)
+        if total_articles % 50 == 0:
+            log.info("Artículos LATAM: %d (descartados: %d)", total_articles, skipped)
 
         if len(batch_chunks) >= BATCH_SIZE:
             flush()
@@ -300,11 +352,9 @@ def process_dump() -> None:
     log.info("RESUMEN FINAL")
     log.info("  Artículos LATAM/Caribe indexados : %d", total_articles)
     log.info("  Chunks indexados                 : %d", total_chunks)
-    log.info("  Artículos descartados (no LATAM) : %d", skipped)
+    log.info("  Artículos descartados            : %d", skipped)
     log.info("=" * 60)
 
-
-# ── Entrypoint ─────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     download_dump()

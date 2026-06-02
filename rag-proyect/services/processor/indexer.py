@@ -7,7 +7,7 @@ from processor.vector_store import client
 
 INDEX_NAME = "documents"
 WEB_CACHE_INDEX_NAME = "web_cache"
-BATCH_SIZE = 16  # ajusta según RAM de Ollama; 16-64 es razonable
+BATCH_SIZE = 64  # Mistral embed aguanta batches grandes; bajar a 16 si se usa Ollama
 
 def _make_chunk_id(text: str) -> str:
     """SHA-256 del texto → ID determinista. Mismo chunk = mismo ID (dedup gratis)."""

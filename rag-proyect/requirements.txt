@@ -1,5 +1,6 @@
 # ── Web crawling ──────────────────────────────────────────────────────────────
 scrapy==2.11.2
+Twisted==23.10.0
 # scrapy-playwright==0.0.40   # Descomentar cuando actives Lonely Planet
 # playwright==1.44.0          # Descomentar cuando actives Lonely Planet
 

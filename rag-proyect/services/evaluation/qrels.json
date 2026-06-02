@@ -2,151 +2,445 @@
   {
     "query_id": 1,
     "query_text": "mejores playas de Brasil",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "4c6949a2bd2354b167782060b754a444a321c53960b043ab5f8700675f1d9db5",
+      "0689990750e4dcd495cd5740b8ca81d67dee1d61b60409c31ee098629e81ff83",
+      "3a6771dff3341df2b0487c0a57872fffcc4f6b1e5760c0dfe2d4d154fcb7fb7b",
+      "505d089bdb891bd9159ef5305ad3b37bcbadfbd29ac3da27f2eef8b34f93977b",
+      "68e3dfe88410009a9de5666d5fa7ef8eaff6f7f1270a7a7ab41b735da9b3eaf8",
+      "f5fe44218c30059e11cb0fdeed0be493e39229b7563d3d68b1e0f709ede8c3b4",
+      "2506ced725acb5c6afedc290c9c464be85ba957e01093bdb7f2fed00506291f0",
+      "9a6c3f10080501febbd961e6bdaa21b7961a852a73b973b3e3ea489a1238876a",
+      "1c25398451bb981c609c98e8578cde338db4907f450327172fd7e15d6b46c696"
+    ]
   },
   {
     "query_id": 2,
     "query_text": "itinerario 3 días en Cusco Perú",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "2828f4381431ff257c2675acb0d93e81fffb06b7bc8ae69333430a108cdf9c27",
+      "260604c2f6e73a35810795a9eb53ba058d2b3a8cc15ba74c2982dacc036c303f",
+      "c9c4b066303610e2fb05f84fb456ee04fe8ec567b121d787a5cba0d5bb7049d9"
+    ]
   },
   {
     "query_id": 3,
     "query_text": "presupuesto para viajar a Colombia",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "fcc0e33532865cc1419b50454a890c26bbacb692461f59f740031ee0c3b1e318",
+      "b3e5d65ee9c20ae1d5b3be76da8dd8d8cee7a3c6fac1a0decbd55e3a209984b9"
+    ]
   },
   {
     "query_id": 4,
     "query_text": "qué hacer en Ciudad de México",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "ebdfccc0f2329ad2273d085967e904a148f45e02aae098dabc5521e61b7fbe93",
+      "66650851e49ca333dadea3309abf68d92d467f0015d77dbfdb17df795c483324",
+      "425e16a24573cab644219dfcbc0f4c11e114652b821a039cf7ed48c09a41e320",
+      "63ebadce0f3d68fbccb719b1a25f337a8e88b8f16f52bbe2eb7f67c9f89a0671"
+    ]
   },
   {
     "query_id": 5,
     "query_text": "lugares turísticos de Argentina",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "ea89b4c456e2c7b170245a5b646fd452169c4a1d7872a2130ce8167faeb97414",
+      "a5d74c53b15a4e4368921d6b6a4ab7d716b6f12165db34d47ff69dbbe4a75717",
+      "b6ab83bc74450fe7279b89b9e90bca435ec450890322938c034d01708581b3c8",
+      "25cca47872853c325bec603f979d9167a028ae1af8b5260a8cb9f3da4b2e038c",
+      "daea57ff30c97d6c980940fa0d8a43e7611e4622d83bb7c57a5cb3284a4d8e7f",
+      "d1d45b2a951e7a286a6d5d210820c73a64a65b6bd0a55c132a7c7f1e06ead973",
+      "b29f9d70ca78670cf11394309275c1c490123299625efdb5055a3750282d230f"
+    ]
   },
   {
     "query_id": 6,
     "query_text": "gastronomía típica de Perú",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "5d546ee475cf6d9b491e5325afc2d3cd4490c4cfad5a28bb192e30123fd8b615",
+      "ca2193a2c3ea8ea256f3b58dfaae57b3072b6f9eea72752b4918d246291f3e0d",
+      "7c17cf3b8bb0d0b61d6cf5d726a919e296b6a274546fdf355bc4b386d01e137a",
+      "79571d981ec0549bb72096e38848b59f7971dc5d613bb080a34728618a9f8ac8"
+    ]
   },
   {
     "query_id": 7,
     "query_text": "ruinas mayas de Guatemala",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "052f0c20099d2b35912ac9bcc5a5dbfd50c011a8ab795e260a5e94d509bd8b48",
+      "93930c570973c9b6603fc5b8d5cb7078c5f73d8e7028cb4c8f148e56262a4b7c",
+      "a8b789acd0bfce6f64d6954e344f12e9b11f336c4663a70d5f5caf8cd434a962",
+      "3f27bbe2432dff1d399d8b7f55ddd5c3e49f606fb6c168ed83b02d475a36b877",
+      "f8910f7e9611a81b2e372829b7cb3f1f6caaec43d8f5fa40a7e55326f9e4e01b",
+      "0938d2c7139c177dbe7e951080a37e2952b4a1bbc7e619178f49e91d1fa6aae9",
+      "af1e60bc5f48013b5b805090747f944956eff70d8808e5bec7a87407072c5400",
+      "11d257e5c7ae43b2244b946042eb5e0e08ccbb55474a1103b81b28795f60c15d",
+      "56e10ba04e57a192950726adf15181e840daf8c00a410a4c1d9432802ad0a0d0",
+      "0528425b28a459f79bf2734fed4cf55457eec633ec9d2332c5508fb9922f4c19"
+    ]
   },
   {
     "query_id": 8,
     "query_text": "trekking en Patagonia Chile",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "179d7f8cbd7738aa4d938e9caa043491e7b6387cc5e28b4bb27df98970757160",
+      "a8d87bd4d122ff53b3eeaba3610ebdd6ff9d6cc0a0baa8ce8d508d2af481e5c7",
+      "ead1fca8b3fb1ebe3886942fa215dab975a34ba137a7c36977ca0511bc98e78c",
+      "eea1fbde3c9b01c95ab92097b9ff2f11968b2cba8757ac031cc7b5be9b96fe9c",
+      "1156a429da603c61a6f05e9a3a4390cef191601e41ba022facf77917e88d58d5",
+      "585aef461b6ad52d0eced99fbd62d3e160731c8f80385ca88b679881c8c3d046",
+      "3dd24bdef87f1d2b249dc1a939539ef6667a8ac936e6f5506713afbcd88259a1",
+      "2bdf97c93772b6ae45d6d7fb8c0d316c8452f65353831134fc830763b4692dfb",
+      "aa39dbc3bf29efdce05fa2e6bcdb3212e285a9e1e5aaaa9e21bd7a58528c40f6"
+    ]
   },
   {
     "query_id": 9,
     "query_text": "playas del Caribe colombiano",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "b84627b6ea6701c5d2ef150367bcaa6a2b84d16811dd912d4bfea2f8a46d2c58",
+      "c850831a8659ecbc14239678638b43a069e5ca58333e0fbf4330cd2bcce74da6"
+    ]
   },
   {
     "query_id": 10,
     "query_text": "volcanes y naturaleza Costa Rica",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "1d2a37c10e56dba2e3dbaeb06dccaefa7ce2584370b5d71a1b7a459055f85d1f",
+      "13cf1f01b559788332806d3c5747d44defe6943f142c7cc6a5f02ced5c197c0f",
+      "723578ec0b236d46cd18dada2e0cbadd4afef7b997f78ac05761e55cc1f67514",
+      "d8fb215804b8cb7e7dfe0ac5ac86972c06ebcfda5d12ad791262898564b5bc2c",
+      "49c9753ffc6cd8fcfededcf09cba9f54d3d4c8b6412c0bc082d6444a40c78ecc",
+      "f28a9319c118acdeee348a15bfe1094e63804c953d01e4f3f6248322964889d5",
+      "742e026d797ed761bdc0ac39bc0776066a1e2994d4bad3e8ad1f1c1f294524f6",
+      "4b2e4afcf2327c8a49bd36ae21d01f12bbe77b447437e2dee96567ee7872507c",
+      "6351c89671664511a28cac6dc9bbf0a683e5f80787d3e0db070c98e4791a58d5",
+      "c0f93d5816bc640850fa95885d1cb19adf46b8e4dfb9639b7fa617f8aa9c6bf7"
+    ]
   },
   {
     "query_id": 11,
     "query_text": "cómo llegar a Machu Picchu",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "cf7cc3d14c51f8b64b394e65243e89f39b5e716481d70c3a8a3b932fce4edd68",
+      "4532f124710db55c00c656bbe106871ae63a4990e90a3bfb4d513442c22d9c44",
+      "6479cbf9f72a174269d397a0af895812a7fd4081911a6fab5113df8ae4c469b5",
+      "6076eb73287dfc960650652d78a8000407434538bb2e3a8601d3bebbb61cf0eb",
+      "a08262874702993476e413089d3cee5ad1d9f3899ed80739ecd44bdf076b4811",
+      "aa01aa979b84c7662ccdfc2d1dccd2292077b6873170638a60f356a582adc923",
+      "c9c4b066303610e2fb05f84fb456ee04fe8ec567b121d787a5cba0d5bb7049d9",
+      "c175fd8fe2d02aab8d922c591195e793ede0e77383fa98fbdbfb8418c25c1326",
+      "33e0ca663254cb1a6b71d6ea887677468ee4072c7f180a2e2f031a8cd166f128"
+    ]
   },
   {
     "query_id": 12,
     "query_text": "islas Galápagos Ecuador turismo",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "8132455b9b21eb62d2dd7d5eb2e58ac09b137278e9fbf3e1326d73da936f5d49",
+      "c7a9db85afd58ac62b7d8dacf2321ce1b43b1c1cec5923b26de0fb1deb3208a0",
+      "0808ee7e8db09b858ed12e08c4cdb813cbd6492f1a08ee7da32a6d84a1cee38b",
+      "f7041907470ff039c26ce3421b8c87be1d785d031dc25b74c3f9620c9eaaab19",
+      "3acf11da851735bfb61b2c54e0089f4798d207e8c7b00f66782aa9c7a0bc921f",
+      "142279a889b09cd585a7591c48dbf7c678c02801567f25505896220a00060a6f",
+      "e7d186db91a93e9048605b36d92b12be121934743596341d8632b1feb9977558",
+      "c96d2f4b804929a4cc8520e424b0145977e01cdce0e5bc14596d66881c7ac974",
+      "847bd03b79190b25a552bc1de59a3d9651578c20c07c8254dd34040848efe1df",
+      "c83f04c5fb9ebf2c0ee25da7b7a418a5389112e312a8c72dddce753b04128cb4",
+      "8346f54062d27d691d96ba2abd89eeb650467332b72650914f90d49558e6be7e",
+      "e2bb7a424f21c19dda40a5d0540daf5f4a8bbd70944bd61545ea339fa5370af3"
+    ]
   },
   {
     "query_id": 13,
     "query_text": "qué visitar en Buenos Aires",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "b29f9d70ca78670cf11394309275c1c490123299625efdb5055a3750282d230f",
+      "e8a9952bc4cd3df9bcc0a7473155b2441b3f3f53a3cf1973c497e62d588dceb3",
+      "71e3aeaf47701926920040a17959bb7321b0a019042f023ae432c34bb9699659",
+      "348232252d494203d7e83641627f988c27a993b29cff67661514103091dce41a",
+      "fa2a518fbab2d275ff20dac0a114729baeee4a76b8400cff9885ac577415aac1"
+    ]
   },
   {
     "query_id": 14,
     "query_text": "salar de Uyuni Bolivia viaje",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "687b779c5734aa2fc0fd0a4edb9a307b4a0bbac16ef051a38531a39c86892efa",
+      "88b943684b94bff1028f3ece7371db07c37cd2e18ee1c28bbdd0cfefb21d2301",
+      "b70c81c2997bede8f15483da982884c45916b2d879c1910391d0ea9d7e1f571d",
+      "0b96530409f70f8e38b637617cb1eb550159bd61eb9e7006a6bf23c829bb403a",
+      "c2fc516f04add66e1e1a9a9459c90a0bf22a65d453cca5891b012eafcad72ba1",
+      "70066343a52d68c95f66da83432c0e71d6239e30edb2bcc03dd8cdbbdccc61d1",
+      "c3cb34defb7d137821014470e04d608bbc39c4e65b22fff66a3b7b9269b1357d",
+      "e5f1c2ac303333b356739186c77d70d81be85a574f267840f567e7d92eb95267",
+      "b1fa11cd91a308a3d995eccb08084509aa75a31bf00bb29a8aeb1fbca8c88321",
+      "239991fa58330f5b8b60e10d24266ed2f019b6eea8407731c5968dfdd05b25ca",
+      "0d7456cce10a419341964eaa7552ae18f87e611060e5f0a83dcafdc24702c791",
+      "7dbc3edc4d17f7bd93e668b567d687a2891a0767d7f25d8bc2bf0d9838e12791"
+    ]
   },
   {
     "query_id": 15,
     "query_text": "La Habana Cuba turismo qué ver",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "07f900057d8f36051607ac67f94d5436801dc5a928adc2906cb25f0cb978c9a3",
+      "6b56a8aebcc57a236a18a18fb0f16a0c0d771ccddf03434d286f20a2640e57c1",
+      "f9719b275fdac064483d465761093bb555393115bd5759450341e383494d1f10",
+      "67ccd33f3ad87cf8982de3d1da35869ef24ebe3f60a801c0b18710ac4517543a",
+      "f964b1db0913d05c91a7ed0c4bcb4e1ee2850e0e38eda5ea291aeb125c9a4c9e",
+      "6afd7f066334ae928961f0f26122a7028b4dfc3a24d11f0d5c4fccef0095d3c3",
+      "fc5514df45e99fbe6575909b003f82f37ed818052b257ab8f3849be9ee29e693",
+      "7ac92be9d7320b2d00504d38e747f0e0328f7ad66388342d000f8a811f956352",
+      "79855486aaf8c062220c862fc9e4ebc0a986ea1627215e9d6f45f4e5b3e98928"
+    ]
   },
   {
     "query_id": 16,
     "query_text": "ecoturismo en el Amazonas Brasil",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "292c8927b8c532b33d84c43d65cb4f289b76a14614e926ec91a84ff002e4f5e1",
+      "ed28514b843ffe2dff817c6adfd69f79bdf04b95a4fb639da54317d2b35001b5",
+      "273c7495c500e4ef5cff0e38322787f616053fe12e204aef943f9d169575011c",
+      "93a6f0d5cc3b336312b2b111c5573e03cd7f4f6df0ca2c6d8e49f650c0e72da8",
+      "5f8e46fb8a9eb025b7088ecd0af7e52716496749513d281b1eb985d8d1d312f9",
+      "4d9ce64efeb438a73060fa2f70d0987a0b8073f1a63af575c6001922f12f6741",
+      "f90431e2ba5a77b746eca4fdef53cebffc80adc5f2d656ab7ad055cd9683488e",
+      "bdcdbc0ce1cdcdca0993af3f3198809bc64c5c58f12abbbe4f3b322bfaf24b5f"
+    ]
   },
   {
     "query_id": 17,
     "query_text": "Bogotá Colombia turismo atracciones",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "e4b3ae5a5bda8d06f012406b02850b7a310435931e34b9237990e7eb62f8f5cb",
+      "d5c71ca859a5b612e25d9ad2d08494b2272e70a4a87fa6df1071423812114ecc",
+      "da58c5d4f586d6c4020d4b595adb99c53ffb95f20fde4b30afa214c89a2eece3",
+      "e3164ee4eda78e956dba93989a50c1c33abb4a7a4378532c70d9906c3d17cb4f",
+      "db0518704d1b51f6f10ac3968e105e79168214069af50b0e8f9017115340d8a6",
+      "ccbffb60e8cd12fe6ec6f116483bc4bda6f11f1b18839d8d1fa1f5c3a3bad234",
+      "002465eb020ade48ec8b084c5f686eb836d9c49463cae86487643cb7d99389e6",
+      "20b1fee36e6da2783b9e9b1a06c6880b68c71f06d5794e436ad084c7adf8ea25"
+    ]
   },
   {
     "query_id": 18,
     "query_text": "Medellín Colombia qué hacer",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "e2ea9f3323609a4dd52824302870680156a55fad9e9cc5e4329c90be05839171",
+      "d4ca2ba1de2e23da39638da9a705e4dc281ddd9ad0a06b694b367ddd61867610",
+      "67cc792a4da9bc473d430c69644a2a12b6577cbd1ce3b3d8ab99e034c99d0a76",
+      "19499042a7adefd9a0a7a594d6ef7099e62b2303d7cb974e3d495a418c8efeac",
+      "3898ba8cd30a3f31483b59fc566f122ac6fe1452e29e7e44bee441311781d4e8"
+    ]
   },
   {
     "query_id": 19,
     "query_text": "hotel económico en Lima Perú",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "07ca5e18f9b741dd404bbf9cc51af01321882945e4c5224733dff407c30ea450",
+      "fc6879059172010cdc9593aaacc173eb8f800b149696e30a5297b70d4dbdc296",
+      "d3b81815cea4ba42a5204ec8573343e251e16ea61bbc5066ccdf1d774d389712",
+      "48e2ce8075e90d0b678a1f40d1d19d043d8410755c051a91844477e1b2cfa641",
+      "3b9bf697f2e1aa9e7ab036327082fc82fe5f514d910e9eb5fc981d98f617126a"
+    ]
   },
   {
     "query_id": 20,
     "query_text": "Cartagena de Indias Colombia playas historia",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "0fbdd275b7fd4899dbdd1a70a3191047a9c622d328c6bdbe24c5674d691e81c7",
+      "cf10291bd9783e6c8d36147d90b50c3ae585a987b4e00918eeeee84a63157cac",
+      "6bcdc9dba4dca0075d58c04d0982689a400867a7d52f6d436e7961efb447d38d",
+      "a39d9df6f4d9a9eee6eabb109bf4b7eed8a75215b2c90507972be178236f7479"
+    ]
   },
   {
     "query_id": 21,
     "query_text": "Tikal Guatemala ruinas mayas selva",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "bc40fb2ffc16354b385be9a9cc6c77b9b293856b1be4ff7365546b7e328ea903",
+      "052f0c20099d2b35912ac9bcc5a5dbfd50c011a8ab795e260a5e94d509bd8b48",
+      "a8b789acd0bfce6f64d6954e344f12e9b11f336c4663a70d5f5caf8cd434a962",
+      "93930c570973c9b6603fc5b8d5cb7078c5f73d8e7028cb4c8f148e56262a4b7c",
+      "af1e60bc5f48013b5b805090747f944956eff70d8808e5bec7a87407072c5400",
+      "59398ca43528723e8d0b711914b6d72fd7b2ec45ad1fca2de5a3a95c78db49f8",
+      "0938d2c7139c177dbe7e951080a37e2952b4a1bbc7e619178f49e91d1fa6aae9",
+      "11d257e5c7ae43b2244b946042eb5e0e08ccbb55474a1103b81b28795f60c15d",
+      "a280275ddccea56c18381aa170e8ea13fbe2672688198dc348ad5bf4c9736d61",
+      "f8910f7e9611a81b2e372829b7cb3f1f6caaec43d8f5fa40a7e55326f9e4e01b"
+    ]
   },
   {
     "query_id": 22,
     "query_text": "lago Titicaca Bolivia Perú",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "2a76c97c17bf35c38295cef69b63901a7b8dfaa4c45f03522e53dc5b3a78d8f3",
+      "2b4bf9114fa4e8d302e81405ce0cd75a2e673b782955c9ad47941bfb86675650",
+      "90aca0d8320add1ed1607b2687d8e5b1aed068539c60e1443f5f768bb4a0cf6a",
+      "fef4c6c680321f7bbd2d54d4c2ccc1db37d1b3523d1595c69fb04cf139958845",
+      "a176607132f6cabc99e1a09a2b95837fcfd63d59f5e110be457ed1880fe2ce59",
+      "2b605e5f9fcc4ea7bd50f71466ec8c50e0d68e302f53edc96881124d26243123",
+      "91a670877cea5079ce187e95aed628a0967e85d0c7b58bdc249be461301a808b",
+      "d7b72e389b3edc6859176b10f430d69efe899ae7bc03c242d8f2515224747504",
+      "c0bd3c7e296794f140be3934082ad1b5e9340db0d9ccfc5ae8bbc262263c8149",
+      "a813847cd3e815515cbf7108b447411cf179e1af951570c5ac140ab6b05a1ffc",
+      "1d9fdc225708105a6cabe2414e10911d963df4e4bd2476e53568c88f5b210d03",
+      "03f1efdcab6228c7db2606ce146fa94d1625b091cb82884d1da34a131aa4fc9e",
+      "56282070ad2073274f71336f987736cc3deb03537a45bf1f7345150ab53677e5",
+      "f3e5c393bcd1b2dc1e8f61e78c69faebfbf6fb5bbf8296233f82c3976a8620fe",
+      "779e46e9aeb22b28f08609703fabc5e98aa805b785ae86a2c36c0f843618e78a",
+      "9445d7c7efc7761f0af7ff5b7f3940aeff456adde1cc4ed20b2cb73b11fb8eb0",
+      "10f6e81b8c90a81d2a2a1eb0d2f30cfa8cbd36180cd07560830c32e102c35cb9",
+      "7bed92d1b00fcb29db5d09e3082e284b576098fb436c56eb55b5177ed795e053",
+      "08865abb0fc3e0dd2268efe310795aff0a46dc53eeae61887690a310f6022893"
+    ]
   },
   {
     "query_id": 23,
     "query_text": "Valparaíso Chile arte cultura",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "c9b96ef57125bb0c7517f315aadc62f5b5244f3d9faa0735e239a602e213e4f3",
+      "2073e192a2b5a627efd1e90f1703ddca72e6598964d626fbe304f2e121914b5d",
+      "008a7927b18947837681716d1168b0dc1e6cf2fd7992f6a1079afa5fa564393a",
+      "68847602e3255861c62b79962b5ad2a53c8bf8bf31afe4cd5bef8a28f92d9aa8",
+      "452b1e658931b9736ff3e2132af2ae116f26278dbf162ed5bc77ee462f488f9c",
+      "6e0e9264321a320280045e37ec08df48e640026cc031406e01d94930b98d42b2",
+      "4200aa1a22961689309d876cdc2cd525dcd854ccb0a3f132af2f9fb3f869d3b9",
+      "95c8c60f55f6466a4a8d0e089fad14279a19e0b38188b933261c856dce23658a",
+      "e3955ba5a128d6f4079dac13095ca2511c888e420c8d7a825811a24f2766f67e",
+      "ba9357a2f14c4e58d67db47d204c4d32a1d5c88a5685ca0ce0625658aea4c4cd",
+      "ce79ab1af1ceba6b3a799bcb8db915973d7cb4121df559ac2d6fd087c4ccb15a"
+    ]
   },
   {
     "query_id": 24,
     "query_text": "cataratas del Iguazú Argentina",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "dd7e5c5897011aa31f7041c4711f928b1fcb814c22d0b8a421ed946053e29b9e",
+      "0d48ccba55da4e10488e984ce29129e144b518d055fbc5008bc1cb1b726a3eac",
+      "696b62ef26f5935d113f01cbca0ee8704dde84d747c45ff34f7bff2deea54008",
+      "f777cd66117e21d059c03bfe27f93502a317a5757e152e5f064f5fead8b5e2a0",
+      "2a2250771b6e3d1f1147addb0dcd552a992cb0323ec29eadee4292150f8b73b4",
+      "545086ae7cc2b9ed56b4e40bc14c2c487e0560acf7acbb29037aa2ff8dd76623",
+      "b37e28de640e4b0c732996151b0b53db778a423a736aa94d40124582ff85d463",
+      "53ef492e4df0913eb9da60251fe7ef73f54f7416074e55a7613acffe9f8ef06f",
+      "9ce0f8aee21cd5749e9ccf95567c8f667582ae84360b3d6a6f1b0b45a8ecbefc",
+      "1e60ffe338934d9b6b636da5b3939183735e74578ddc5a462e37552dbd7cee85",
+      "8513669ca2f92a25d6fb60860642ec2ef8d3a5bc1f72ff023c2ed16cffebed77",
+      "1cc08d1ab4b7be497826647bbbca85266b54f881b6b7ec7ddd9fc6d7240146cc",
+      "208ebe5ba7cbd998f7ffea077070f369cb8ad4827a7b89237d6be4829cfb931c",
+      "2b1a2753175bd5be8351ca9cb4290a639dd087d0858b05ddaccfc203c26c271b",
+      "7a3ca04572cfe8f30ef9ea62a85eb8756d31882b2920b4835a5cec1924f4285b",
+      "3fc84ee44653ba1b6fbfd5e9585a77ab2c0fc7afb6a8358b35dc3378fa73f6e2",
+      "a885c9718603e1df2228b392f2468faa5ffa759b3df92e7f6946b443bd88fc84",
+      "2230415829fc80dc3e082a65d689501362285b8891ccfc32ddf5495947929f3e"
+    ]
   },
   {
     "query_id": 25,
     "query_text": "Montevideo Uruguay turismo",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "806ec0bb5867676ac1cf2581a8359195fb3a4e970ff8b94359d815d6dd30d8da",
+      "f3bb80e8bac7c1b22642c4ae5a977cbcf1575d9bc1c3a4ccfdfdfdf7ef3fa180",
+      "43f52b7c5167e29456d2c40f819124c1bea0c2f50a73f6943eb5e2854e32f1c4",
+      "0b69086f1dfa939e3ef73f96104132b96ef845fb94a4bfbd57612914a097386d",
+      "844f51b33d881382ab035b2c8d0fe6ef701885609304f61b02079ad86cfbede9",
+      "60ba1a2d5ad3c83e56b5d664161eca272a61fd34591f57c3eedbe5710bc9a2d7",
+      "3fa7c5c43908c15aa8a49cc5ea99e242c75abd1ba4dedcaba49cd14d15a7e62c",
+      "9d6b0fb160f68b3148d4c77afbf969114c47e4af287f6787560262323d1efc23",
+      "5cd40fffafba47474d3b1c1694ae507e4b40168ba892dc93e117cd2aa8336513",
+      "778a8d207d4661894d11b0628f928be5772fcad04f2aa6c45cc92a0cb65baece"
+    ]
   },
   {
     "query_id": 26,
     "query_text": "San José Costa Rica qué hacer",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "48069118027a9d58acf5c53ad178b22e821db36fbd532f18f4af9f6984d9ab50",
+      "f8b0895da275836744264ada6fc5eff66421d7a127998ea84a79fdb590331429",
+      "ad89c3a5541f2275d3d81c69e8acfe97409280fd2d4bf0556c3bfedd85145733",
+      "bf9dccf227039bb8f87de37a905adc01b622a61f45ed9e36251f725b57c01f97",
+      "31353b51ca37eeb7003803403a3151d2756ac2973509151f9f4df8b85fd6b2b8"
+    ]
   },
   {
     "query_id": 27,
     "query_text": "Ciudad de Panamá turismo Canal",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "71123eb189880c0803e7bd4f54f14f84287fa96275e22af2abc41c32dff7b808",
+      "db90986dd3d3f44537d933f54246335af13e5e9d136adf3aad2ceb9db0bbb76a",
+      "91474202214fc22660c4b0bc7c97505c2d0498337f47ca646b970d42e367d155",
+      "1d23764b5175bf98ac4dde59d530fc5868b32bc56ccc6df6a4db9e95e1082fde",
+      "5bc9255422bd8fd90b8884db10b3e38108f67711a8b46c350339c5ad90e41d23",
+      "83332d944c2abc9ac1168a237e7466bc01e4845d7d6aa51018ddf1ffb7f9c240",
+      "a89eff8c496e6b704f15e8e9fcbf069d5515dd37e18fa82859b7f88c842c5ef4",
+      "3f234232d083638e38b00d5907210670fa9edc6277bce9f3cdf7152fdf15370c",
+      "491a7b3bf8e20e6dcba8136e6ff7a8daa5c4df7c1863550da9c1af4bb854a843",
+      "c6ec09636d85460cd429b61d005cdb77d8e3c34cd057bcf9ce73818e96ec2868",
+      "ca684e0c59e97bbe1fe96f6c956e86d9935a7f202588371ba50b08e61bf7faa4",
+      "b8529e92e30285df5e8163342881934e54771955026a3431202c7fe4c919342e",
+      "2989100d3ed61309f334191890dd187dfb3b4a46d946d0330b9d97b67d8575e9",
+      "f1660d4d2a86113116e3f19e46249f8586d2fad7996fac8065ed065c12e34d35",
+      "283836fd465c8f004acfa76b49214819a6fc8bb847bd6d008ebdc3479dc9d490",
+      "f8910f7e9611a81b2e372829b7cb3f1f6caaec43d8f5fa40a7e55326f9e4e01b",
+      "1c078caffbfd0ceee271c068b295434a3061dd66a1263f68815c4426e11ed8e9",
+      "f501523c9190faa5a03a9238ffe54a278c138d3dbcdb4f972588d031fbba538a",
+      "dc50cd4aa8e08ea8d72d6ce5a3a7efcaaac49d0b1066196ae824f70d33aa7993"
+    ]
   },
   {
     "query_id": 28,
     "query_text": "Oaxaca México gastronomía cultura",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "ed85db6641106a0d3421dfdfd64ad5022caabc24aa7d6f1916adfa0e2d89c765",
+      "7db0766ffee3f4dc2205788b518db28b180953a9069deeb55435987c9ed526ad",
+      "cdb4ac56fcfd658793e9087d74dedf1f0e42872e63c996842b9691c9ff2c7dbd",
+      "85a134058b3a7bc9ac696ad06d0d9af3eeb232c34fd39c6e53c69a713f94609e",
+      "a6255db9e62846edea9fe29ccb03c10f4f99d71eaec2832c0451af26a8d898e4",
+      "49b22dff2eb33cc9bd6289b21df96ca786819f356c04b3dd3a8c8f9ed1071418",
+      "fecd78ec1806b7ff1689501715a47288f2502bff7126a92dd29a92db4d3a3c98",
+      "a34a203b38f2968c5668db92ea2a45c650ba56855736c9397abf328a34424341"
+    ]
   },
   {
     "query_id": 29,
     "query_text": "surf y playas Nicaragua",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "a002183f8dca9d318c6e902a85d4b0b583502b5894393df1cb6142fe6559998d",
+      "c0f93d5816bc640850fa95885d1cb19adf46b8e4dfb9639b7fa617f8aa9c6bf7",
+      "6e5486a5c6fb6735f8f50c3904421b4f2c0a753a4d7e2579ad511dfd1204abaa",
+      "80c3ace2d26ff14dedfc3102aff04ab00983d53f29e495168e9862987eada1aa",
+      "fe3c9a145fb316bae11ae7d613c3d8e879b34fde3ff93dc85ff9ffab7e120612",
+      "7952229a1b889216f51b603dd0994cfb8cd9c63078a320ef660c0df5499f659e",
+      "2dc8dd483065448b3d1d488d584572ea37287bdde9360c360680e342e22625e1",
+      "f2b4a5212e25c4869b75ba019525fa45ac06fbcb6ef37392c50586cc53c816ed",
+      "e428bbaab991018e2f039d028c5479a46f83ccc680cf195296811f026326dcfc",
+      "099acfffbe3724039faf39a7217bd80a14351e1db95ebbab087fa6272d916c04"
+    ]
   },
   {
     "query_id": 30,
     "query_text": "desierto de Atacama Chile",
-    "relevant_chunks": []
+    "relevant_chunks": [
+      "6edde10ef2a6114b1a026d2fa385d70754102c89fe486c7490dd113d4e7e2793",
+      "2d69f3e83cc59dc35dd4b1d96f0cc1bc9df83eb3a93a7ec1638ae67eaca33581",
+      "f2735bef43a8740df5fb1529ac9c4a905485ca273a69075f20b99190ee322679",
+      "47b1f48e0f936f60b5d513622335d4abc35168c445097cdefab7328a32eb9591",
+      "35fe60fbf3d8e85f4efa21edc6b10473ad0c8bcce2bbd28039f1db6c81e4be6a",
+      "9a8e035503c2ad4f16c64eb0ef9e2de3cb5e14a0734a1f3daab60ca3766581e2",
+      "18816ef122d06538c468de3e56e25c333cef05b9b7ae965acbe72b1411536dcb",
+      "7adb292d5a2eb94aa0f319ae95cc7762ddd87000be2c544b2ad49d3c424927cc",
+      "744ecc6d347b7a1b1c81cd746c941e4cd28caec932e7df0c97ccae6053e9dba0",
+      "e3b5e5d53aaed0dc8916549586be3250d5a68d98c39b09c7ba7d6be6a8c921b8",
+      "155e25d6e4ae26525f2ad7c8718fba1c547424f51d3d946d9e7ac79d032787d0",
+      "2aad418198eb60dbdcce2c2c0bf2bff39683c589706f6620756be11fbed64b62",
+      "6f3645800544fcb32048f3b0a8be8c93a6d30c2e2440262ae213d339b053c4fa",
+      "a94253517663554b424c229cedde0e04a01b164b9a8030ed7cd65f5320301c85",
+      "1ddb5dc76641799281dcfca74fbcb45e613bd654175587366181ee90faccf740",
+      "940eee7002d203f6ece7e987c8018256540794b0d60f39672a7a14865294ff99",
+      "59c7fb16cf07079f3106ddac7e51e7146cef2091713a26cb2f0adb92fc186bf6"
+    ]
   }
 ]
