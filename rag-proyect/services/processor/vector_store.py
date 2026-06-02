@@ -35,11 +35,11 @@ def create_index(index_name: str = "documents"):
                 },
                 "embedding": {
                     "type": "knn_vector",
-                    "dimension": 768,
+                    "dimension": 1024,
                     "method": {
                         "name": "hnsw",
-                        "space_type": "cosinesimil", # coseno = lo que espera nomic
-                        "engine": "lucene",          # o "nmslib"; lucene no requiere plugin
+                        "space_type": "cosinesimil",
+                        "engine": "lucene",
                         "parameters": {
                             "m": 16,
                             "ef_construction": 128

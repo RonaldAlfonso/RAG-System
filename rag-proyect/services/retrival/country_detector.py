@@ -152,6 +152,12 @@ _ALIASES: dict[str, str] = {
     # Turcos y Caicos
     "turcos y caicos":              "Turcos y Caicos",
     "turks and caicos":             "Turcos y Caicos",
+    # América Latina (región)
+    "américa latina":               "América latina",
+    "america latina":               "América latina",
+    "latinoamérica":                "América latina",
+    "latinoamerica":                "América latina",
+    "latin america":                "América latina",
 }
 
 # ordena por longitud descendente para que "costa rica" se pruebe antes que "rica"

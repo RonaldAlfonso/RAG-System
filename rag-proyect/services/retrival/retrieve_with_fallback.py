@@ -1,8 +1,28 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict, Optional
 
 from retrival.expansion_pipeline import apply_expansion_pipeline
+
+log = logging.getLogger(__name__)
+
+
+def _log_expansion(original: str, stats: dict, final_query: str) -> None:
+    sep = "─" * 60
+    log.info(sep)
+    log.info("QUERY ORIGINAL   : %s", original)
+    if stats.get("expansion_used"):
+        log.info("EXPANSIÓN LLM    : %s", stats.get("expanded_query_semantic"))
+    else:
+        log.info("EXPANSIÓN LLM    : (no aplicada)")
+    if stats.get("prf_used"):
+        log.info("PRF              : %s", stats.get("prf_expanded_query"))
+    else:
+        log.info("PRF              : (no aplicado)")
+    if stats.get("expansion_used") or stats.get("prf_used"):
+        log.info("QUERY FINAL      : %s", final_query)
+    log.info(sep)
 
 
 def retrieve_context_with_fallback(
@@ -56,6 +76,7 @@ def retrieve_context_with_fallback(
 
     if not is_insufficient(results_1, context_1):
         expanded_query, expansion_stats = apply_expansion_pipeline(query, results_1)
+        _log_expansion(query, expansion_stats, expanded_query)
         if expansion_stats.get("expansion_used") or expansion_stats.get("prf_used"):
             results_2 = hybrid_search(expanded_query, top_k=top_k, filters=filters)
             context_2 = format_context(results_2)
