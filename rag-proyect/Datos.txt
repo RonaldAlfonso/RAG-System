@@ -1,0 +1,13 @@
+
+# Url proyecto
+https://github.com/RonaldAlfonso/RAG-System
+
+# Integrantes (Nombre completo, Grupo, Carrera)
+Ronald Alfonso Pérez c311 Computacion
+Abraham Rey Sánchez Amador c312 Computacion 
+
+# Definición del sistema
+D: colección de artículos turísticos sobre América Latina y el Caribe divididos en fragmentos de aproximadamente 512 tokens, almacenados en dos índices de OpenSearch: el índice principal con contenido pre-indexado de Wikivoyage y sitios de viaje, y un índice de caché web que se completa automáticamente cuando el sistema recurre al fallback.
+Q: consultas en lenguaje natural en español escritas por el usuario. Opcionalmente se expanden antes de la búsqueda mediante un LLM que genera paráfrasis y mediante retroalimentación de pseudo-relevancia que agrega términos extraídos de los primeros resultados obtenidos.
+F: marco de modelado que combina representaciones densas —embeddings de 1 024 dimensiones generados por la API de Mistral (mistral-embed) con similitud coseno— e índice léxico BM25, fusionados mediante normalización min-max y suma ponderada en un pipeline híbrido de OpenSearch, con reordenamiento neuronal opcional mediante un cross-encoder (ms-marco-MiniLM-L-6-v2).
+R(q,d): función de ranking que, en el modo base, combina las puntuaciones BM25 y densa normalizadas; y en el modo con reordenamiento, sustituye esa combinación por la puntuación del cross-encoder. En ambos casos se aplican dos condicionantes: un filtro duro de país que restringe los candidatos al país mencionado en la consulta cuando se detecta uno, y un clasificador de dominio basado en LLM que bloquea el fallback web cuando la consulta está fuera del ámbito turístico.
