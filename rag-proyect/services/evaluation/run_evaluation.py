@@ -10,12 +10,13 @@ O desde services/:
     python evaluation/run_evaluation.py
 
 Parámetros:
-    --qrels        Ruta al archivo qrels.json  (default: evaluation/qrels.json)
-    --top-k        Valores de k separados por comas  (default: 5,10,20)
-    --use-fallback Activar el fallback web durante la evaluación
-    --use-expansion Activar expansión de consultas y PRF
-    --filters      Filtros JSON, ej. '{"pais": "Peru"}'
-    --output-dir   Directorio donde guardar resultados  (default: evaluation/results)
+    --qrels          Ruta al archivo qrels.json  (default: evaluation/qrels.json)
+    --top-k          Valores de k separados por comas  (default: 5,10,20)
+    --use-fallback   Activar el fallback web durante la evaluación
+    --use-expansion  Activar expansión de consultas y PRF
+    --use-reranking  Activar re-ranking con cross-encoder tras la recuperación
+    --filters        Filtros JSON, ej. '{"pais": "Peru"}'
+    --output-dir     Directorio donde guardar resultados  (default: evaluation/results)
 """
 
 import sys
@@ -44,6 +45,8 @@ def main():
                         help='Activar el fallback web durante la evaluación')
     parser.add_argument('--use-expansion', action='store_true',
                         help='Activar expansión de consultas y PRF')
+    parser.add_argument('--use-reranking', action='store_true',
+                        help='Activar re-ranking con cross-encoder tras la recuperación')
     parser.add_argument('--filters', type=str, default=None,
                         help="Filtros en formato JSON (ej. '{\"pais\": \"Peru\"}')")
     parser.add_argument('--output-dir', type=str, default='evaluation/results',
@@ -68,12 +71,27 @@ def main():
     top_k_list = [int(k.strip()) for k in args.top_k.split(',')]
     filters = json.loads(args.filters) if args.filters else None
 
+    # Determinar nombre del modo para el reporte
+    if args.use_fallback:
+        mode = "fullpipeline"
+    elif args.use_expansion and args.use_reranking:
+        mode = "expansion_reranking"
+    elif args.use_expansion:
+        mode = "expansion"
+    elif args.use_reranking:
+        mode = "reranking"
+    else:
+        mode = "baseline"
+
+    print(f"Modo de evaluación: {mode}")
+
     # Ejecutar consultas
     results = run_queries(
         qrels=annotated,
         top_k_list=top_k_list,
         use_fallback=args.use_fallback,
         use_expansion=args.use_expansion,
+        use_reranking=args.use_reranking,
         filters=filters,
         output_dir=args.output_dir
     )
@@ -85,7 +103,7 @@ def main():
     aggregated = aggregate_metrics(all_metrics, top_k_list)
 
     # Generar informe (se guarda en evaluation/results/)
-    report_path = generate_report(all_metrics, aggregated, top_k_list, output_dir=args.output_dir)
+    report_path = generate_report(all_metrics, aggregated, top_k_list, mode=mode, output_dir=args.output_dir)
     print(f"\nInforme guardado en: {report_path}")
 
     # Mostrar resumen en consola

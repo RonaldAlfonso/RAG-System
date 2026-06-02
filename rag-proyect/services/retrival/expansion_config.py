@@ -37,7 +37,7 @@ EXPANSION_ENABLED: bool = _get_env_bool("EXPANSION_ENABLED", True)
 
 # ── Expansión semántica con LLM ───────────────────────────────────────────────
 SEMANTIC_EXPANSION_ENABLED: bool = _get_env_bool("SEMANTIC_EXPANSION_ENABLED", True)
-SEMANTIC_EXPANSION_MODEL: str = _get_env_str("SEMANTIC_EXPANSION_MODEL", os.getenv("LLM_MODEL", "qwen2.5:3b"))
+SEMANTIC_EXPANSION_MODEL: str = _get_env_str("SEMANTIC_EXPANSION_MODEL", os.getenv("MISTRAL_MODEL") or os.getenv("LLM_MODEL", "qwen2.5:3b"))
 SEMANTIC_EXPANSION_TERMS: int = _get_env_int("SEMANTIC_EXPANSION_TERMS", 5)
 SEMANTIC_EXPANSION_TEMPERATURE: float = _get_env_float("SEMANTIC_EXPANSION_TEMPERATURE", 0.4)
 

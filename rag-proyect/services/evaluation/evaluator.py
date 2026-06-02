@@ -11,6 +11,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from retrival.retriever import hybrid_search
 from retrival.retrieve_with_fallback import retrieve_context_with_fallback
 from retrival.fallback_policy import WEB_FALLBACK_ENABLED, is_insufficient
+from retrival.country_detector import detect_country
+from retrival.reranker import rerank
 
 
 def load_qrels(qrels_path: str) -> List[Dict[str, Any]]:
@@ -30,6 +32,7 @@ def run_queries(
     top_k_list: List[int] = [5, 10, 20],
     use_fallback: bool = False,
     use_expansion: bool = False,
+    use_reranking: bool = False,
     filters: Optional[Dict] = None,
     output_dir: str = "evaluation/results"
 ) -> List[Dict[str, Any]]:
@@ -38,9 +41,10 @@ def run_queries(
     Retorna una lista de resultados por consulta con 'retrieved' (listas de chunk_id para cada k).
 
     Modos de búsqueda:
-    - use_fallback=True : retrieve_context_with_fallback (incluye expansión + fallback web)
-    - use_expansion=True, use_fallback=False : hybrid_search con query expandida por LLM
-    - ambos False (baseline): hybrid_search directo sin expansión
+    - use_fallback=True    : retrieve_context_with_fallback (incluye expansión + fallback web)
+    - use_expansion=True   : hybrid_search con query expandida por LLM
+    - use_reranking=True   : re-ordena candidatos con cross-encoder tras la recuperación
+    - todos False (baseline): hybrid_search directo sin módulos adicionales
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -51,14 +55,24 @@ def run_queries(
         relevant_set = set(q['relevant_chunks'])
         query_id = q.get('query_id', len(results))
 
-        print(f"Ejecutando consulta {query_id}: {query_text[:50]}...")
+        # Detectar país automáticamente si no se pasaron filtros manuales
+        query_filters = filters
+        if query_filters is None:
+            country = detect_country(query_text)
+            if country:
+                query_filters = {"pais": country}
+                print(f"Ejecutando consulta {query_id}: {query_text[:50]}... [país: {country}]")
+            else:
+                print(f"Ejecutando consulta {query_id}: {query_text[:50]}... [sin país detectado]")
+        else:
+            print(f"Ejecutando consulta {query_id}: {query_text[:50]}...")
 
         if use_fallback:
             # retrieve_context_with_fallback ya incluye expansión + fallback web
             retrieval = retrieve_context_with_fallback(
                 query=query_text,
                 top_k=max(top_k_list),
-                filters=filters
+                filters=query_filters
             )
             retrieved_docs = retrieval['results']
         elif use_expansion:
@@ -68,15 +82,19 @@ def run_queries(
             retrieved_docs = hybrid_search(
                 query=expanded_query,
                 top_k=max(top_k_list),
-                filters=filters
+                filters=query_filters
             )
         else:
             # Baseline: búsqueda directa sin expansión ni fallback
             retrieved_docs = hybrid_search(
                 query=query_text,
                 top_k=max(top_k_list),
-                filters=filters
+                filters=query_filters
             )
+
+        # Re-ranking opcional: reordena candidatos con cross-encoder
+        if use_reranking and retrieved_docs:
+            retrieved_docs = rerank(query_text, retrieved_docs)
 
         # Extraer chunk_ids en orden
         chunk_ids = [doc.get('chunk_id', doc.get('_id', '')) for doc in retrieved_docs if doc.get('chunk_id')]
@@ -90,6 +108,7 @@ def run_queries(
             'query_id': query_id,
             'query_text': query_text,
             'relevant': list(relevant_set),
+            'country_filter': query_filters.get('pais') if query_filters else None,
             **ranked_by_k,
             'full_ranking': chunk_ids
         }

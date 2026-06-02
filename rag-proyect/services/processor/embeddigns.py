@@ -1,24 +1,31 @@
+import os
 import requests
 from typing import List
 
-OLLAMA_URL = "http://ollama:11434/api/embed"  # endpoint batch (Ollama ≥0.1.34)
+MISTRAL_API_KEY     = os.getenv("MISTRAL_API_KEY", "")
+MISTRAL_EMBED_URL   = "https://api.mistral.ai/v1/embeddings"
+MISTRAL_EMBED_MODEL = "mistral-embed"
+
 
 def get_embeddings_batch(texts: List[str]) -> List[List[float]]:
-    """
-    Llama a Ollama una sola vez para N textos.
-    El endpoint /api/embed acepta lista en 'input' (plural).
-    """
+    if not MISTRAL_API_KEY:
+        raise RuntimeError(
+            "MISTRAL_API_KEY no está configurada. "
+            "Agrégala al .env y reinicia los contenedores."
+        )
     response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": "nomic-embed-text",
-            "input": texts          # lista, no string
+        MISTRAL_EMBED_URL,
+        headers={
+            "Authorization": f"Bearer {MISTRAL_API_KEY}",
+            "Content-Type": "application/json",
         },
-        timeout=120
+        json={"model": MISTRAL_EMBED_MODEL, "input": texts},
+        timeout=60,
     )
     response.raise_for_status()
-    return response.json()["embeddings"]  # lista de vectores
+    data = response.json()["data"]
+    return [item["embedding"] for item in sorted(data, key=lambda x: x["index"])]
+
 
 def get_embedding(text: str) -> List[float]:
-    """Wrapper de un solo texto (útil para búsqueda)."""
     return get_embeddings_batch([text])[0]

@@ -1,5 +1,6 @@
 # ── Web crawling ──────────────────────────────────────────────────────────────
 scrapy==2.11.2
+Twisted==23.10.0
 # scrapy-playwright==0.0.40   # Descomentar cuando actives Lonely Planet
 # playwright==1.44.0          # Descomentar cuando actives Lonely Planet
 
@@ -21,6 +22,9 @@ uvicorn[standard]==0.30.6
 
 # ── EXPANSION ───────────────────────────────────────────────────────────────────────
 scikit-learn==1.5.1
+
+# ── Re-ranking ────────────────────────────────────────────────────────────────
+sentence-transformers==3.0.1
 
 # ── System Evaluation ───────────────────────────────────────────────────────────────────────
 pandas==2.2.2

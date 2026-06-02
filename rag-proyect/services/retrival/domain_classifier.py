@@ -17,7 +17,10 @@ from retrival.domain_gating_policy import (
 
 _SYSTEM_PROMPT = (
     "Eres un clasificador de dominio. "
-    "Tu tarea es decidir si una consulta pertenece al dominio: turismo y viajes en Latinoamérica. "
+    "Tu tarea es decidir si una consulta pertenece al dominio: turismo y viajes en Latinoamérica y el Caribe. "
+    "El Caribe incluye: Cuba, Jamaica, Haití, República Dominicana, Puerto Rico, Bahamas, Barbados, "
+    "Trinidad y Tobago, Aruba, Curazao, Santa Lucía, Granada, Dominica, Martinica, Guadalupe, "
+    "San Vicente, Antigua, San Cristóbal y Nieves, Turcos y Caicos, Islas Caimán, entre otras. "
     "Responde estrictamente en formato JSON y sin texto extra."
 )
 
@@ -32,7 +35,7 @@ def _build_prompt(query: str) -> str:
         '  "reason": string\n'
         "}\n\n"
         "Reglas:\n"
-        "- in_domain=true solo si la consulta es claramente sobre turismo/viajes en LATAM (destinos, rutas, atracciones, cultura turística, recomendaciones, seguridad turística, transporte turístico, presupuesto de viaje).\n"
+        "- in_domain=true si la consulta es sobre turismo/viajes en Latinoamérica o el Caribe (destinos, rutas, atracciones, cultura turística, recomendaciones, seguridad turística, transporte turístico, presupuesto de viaje). El Caribe completo es in_domain.\n"
         "- in_domain=false si el tema es ajeno (motores de avión, medicina, programación, deportes, ingeniería, etc.).\n"
         "- confidence debe estar entre 0 y 1.\n"
         "- reason debe ser una frase breve.\n\n"

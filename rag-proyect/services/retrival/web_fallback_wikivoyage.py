@@ -6,7 +6,7 @@ from urllib.parse import quote_plus, urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from bs4.exceptions import FeatureNotFound
+from bs4 import FeatureNotFound
 from retrival.country_detector import detect_country
 
 BASE_URL = "https://es.wikivoyage.org"
@@ -41,24 +41,42 @@ def _http_get(url: str, timeout_seconds: int) -> str:
     return resp.text
 
 
+_WIKI_EXCLUDED = {
+    "Página_principal", "Destinos", "Guías_estelares", "Artículo_de_calidad",
+    "Acerca_de", "Portada", "Special", "Help", "Wikipedia",
+}
+
 def _extract_result_urls(search_html: str, max_pages: int) -> List[str]:
     soup = _make_soup(search_html)
 
     urls: List[str] = []
     seen: set[str] = set()
 
-    for a in soup.find_all("a", href=True):
-        href = a.get("href")
-        if not href:
+    # Buscar primero en la sección de resultados de búsqueda
+    results_section = soup.select_one(".mw-search-results, #mw-content-text .searchresults")
+    search_anchors = results_section.find_all("a", href=True) if results_section else []
+
+    # Si no hay sección de resultados, buscar en todo el contenido (fallback)
+    if not search_anchors:
+        content = soup.select_one("#mw-content-text") or soup
+        search_anchors = content.find_all("a", href=True)
+
+    for a in search_anchors:
+        href = a.get("href", "")
+        if not href.startswith("/wiki/"):
             continue
         if "#" in href:
             continue
-        if not href.startswith("/wiki/"):
+
+        # Excluir páginas de navegación y namespaces
+        slug = href.split("/wiki/")[-1]
+        if any(excl in slug for excl in _WIKI_EXCLUDED):
+            continue
+        if ":" in slug:
             continue
 
         title = (a.get_text() or "").strip()
-        # Excluye namespaces (Special:, Help:, File:, Category:, etc.).
-        if ":" in title:
+        if not title or len(title) < 2:
             continue
 
         full = urljoin(BASE_URL, href)
@@ -129,8 +147,7 @@ def fetch_wikivoyage_pages(query: str, max_pages: int, timeout_seconds: int) -> 
             if not text:
                 continue
 
-            sample_for_detection = f"{title} {text[:2000]}"
-            detected_country = detect_country(sample_for_detection)
+            detected_country = detect_country(title) or detect_country(text[:500])
 
             docs.append(
                 {
