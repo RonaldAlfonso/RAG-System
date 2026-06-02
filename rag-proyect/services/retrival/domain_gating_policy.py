@@ -44,7 +44,7 @@ consulta pertenece al dominio de turismo en Latinoamérica.
 """
 
 DOMAIN_GATING_ENABLED: bool = _get_env_bool("DOMAIN_GATING_ENABLED", True)
-DOMAIN_GATING_MODEL: str = _get_env_str("DOMAIN_GATING_MODEL", os.getenv("LLM_MODEL", ""))
+DOMAIN_GATING_MODEL: str = _get_env_str("DOMAIN_GATING_MODEL", os.getenv("MISTRAL_MODEL") or os.getenv("LLM_MODEL", ""))
 DOMAIN_GATING_CONFIDENCE_THRESHOLD: float = _get_env_float(
     "DOMAIN_GATING_CONFIDENCE_THRESHOLD", 0.7
 )

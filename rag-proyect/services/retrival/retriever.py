@@ -1,14 +1,15 @@
 from typing import List, Dict, Optional
 from processor.vector_store import client
 from processor.embeddigns import get_embedding
+from processor.indexer import INDEX_NAME, WEB_CACHE_INDEX_NAME
 
-INDEX_NAME = "documents"
 PIPELINE_ID = "hybrid-pipeline"
 
 def hybrid_search(
     query: str,
     top_k: int = 5,
-    filters: Optional[Dict] = None
+    filters: Optional[Dict] = None,
+    index_name: str = INDEX_NAME,
 ) -> List[Dict]:
     query_vector = get_embedding(query)
 
@@ -51,7 +52,7 @@ def hybrid_search(
         }
 
     response = client.search(
-        index=INDEX_NAME,
+        index=index_name,
         body=body,
         params={"search_pipeline": PIPELINE_ID}
     )

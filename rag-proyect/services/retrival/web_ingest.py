@@ -11,7 +11,7 @@ def ingest_web_documents(docs: List[dict]) -> Dict[str, int]:
         return {"docs_received": 0, "chunks_indexed": 0}
 
     # Import diferido para soportar ejecución local sin dependencias de OpenSearch.
-    from processor.indexer import BATCH_SIZE, index_chunks_batch
+    from processor.indexer import BATCH_SIZE, WEB_CACHE_INDEX_NAME, index_chunks_batch
 
     all_chunks: List[dict] = []
 
@@ -37,11 +37,11 @@ def ingest_web_documents(docs: List[dict]) -> Dict[str, int]:
     while len(pending) >= BATCH_SIZE:
         batch = pending[:BATCH_SIZE]
         del pending[:BATCH_SIZE]
-        indexed = index_chunks_batch(batch)
+        indexed = index_chunks_batch(batch, index_name=WEB_CACHE_INDEX_NAME)
         chunks_indexed += int(indexed or 0)
 
     if pending:
-        indexed = index_chunks_batch(pending)
+        indexed = index_chunks_batch(pending, index_name=WEB_CACHE_INDEX_NAME)
         chunks_indexed += int(indexed or 0)
 
     return {"docs_received": len(docs), "chunks_indexed": chunks_indexed}

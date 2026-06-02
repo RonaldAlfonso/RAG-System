@@ -19,6 +19,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
+@app.on_event("startup")
+def _ensure_indices():
+    from processor.vector_store import create_index
+    create_index("documents")
+    create_index("web_cache")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
