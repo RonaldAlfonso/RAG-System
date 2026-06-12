@@ -35,6 +35,12 @@ app.add_middleware(
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
+class FeedbackRequest(BaseModel):
+    query:    str  = Field(..., description="Consulta original del usuario")
+    chunk_id: str  = Field(..., description="ID del chunk calificado")
+    relevant: bool = Field(..., description="True = útil, False = no útil")
+
+
 class AskRequest(BaseModel):
     query: str = Field(..., min_length=3, examples=["¿Qué playas hay en Colombia?"])
     top_k: int = Field(default=5, ge=1, le=20)
@@ -76,6 +82,31 @@ class AskResponse(BaseModel):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/feedback", status_code=200)
+def feedback_endpoint(body: FeedbackRequest):
+    """Registra la retroalimentación del usuario sobre un chunk recuperado."""
+    from processor.vector_store import client as os_client
+    if not os_client.indices.exists(index="feedback"):
+        os_client.indices.create(
+            index="feedback",
+            body={
+                "mappings": {
+                    "properties": {
+                        "query":    {"type": "text"},
+                        "chunk_id": {"type": "keyword"},
+                        "relevant": {"type": "boolean"},
+                    }
+                }
+            },
+            ignore=400,
+        )
+    os_client.index(
+        index="feedback",
+        body={"query": body.query, "chunk_id": body.chunk_id, "relevant": body.relevant},
+    )
+    return {"status": "ok", "chunk_id": body.chunk_id, "relevant": body.relevant}
 
 
 @app.post("/ask", response_model=AskResponse)

@@ -28,6 +28,10 @@ module.exports = function (/* ctx */) {
           target: process.env.API_TARGET || 'http://localhost:8000',
           changeOrigin: true,
         },
+        '/feedback': {
+          target: process.env.API_TARGET || 'http://localhost:8000',
+          changeOrigin: true,
+        },
       },
     },
 

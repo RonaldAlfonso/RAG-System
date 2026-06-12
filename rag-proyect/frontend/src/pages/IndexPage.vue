@@ -48,6 +48,25 @@
               </q-card-actions>
             </q-card>
 
+            <!-- Retroalimentación -->
+            <div v-if="!msg.streaming" class="row items-center q-gutter-xs q-mt-xs q-ml-xs">
+              <span class="text-caption text-grey-6">¿Te fue útil?</span>
+              <q-btn
+                flat dense round
+                :icon="msg.feedback === true ? 'thumb_up' : 'thumb_up_off_alt'"
+                :color="msg.feedback === true ? 'teal-8' : 'grey-5'"
+                size="sm"
+                @click="sendFeedback(i, true)"
+              />
+              <q-btn
+                flat dense round
+                :icon="msg.feedback === false ? 'thumb_down' : 'thumb_down_off_alt'"
+                :color="msg.feedback === false ? 'red-6' : 'grey-5'"
+                size="sm"
+                @click="sendFeedback(i, false)"
+              />
+            </div>
+
             <!-- Fuentes -->
             <q-expansion-item
               v-if="msg.sources.length"
@@ -124,6 +143,7 @@ interface Message {
   detected_country: string | null
   sources: Source[]
   streaming: boolean
+  feedback: boolean | null
 }
 
 export default defineComponent({
@@ -155,6 +175,7 @@ export default defineComponent({
         detected_country: null,
         sources: [],
         streaming: true,
+        feedback: null,
       })
       scrollBottom()
 
@@ -173,12 +194,28 @@ export default defineComponent({
       })
     }
 
+    async function sendFeedback (idx: number, relevant: boolean): Promise<void> {
+      const msg = messages.value[idx]
+      if (!msg || msg.feedback !== null) return
+      const chunkId = msg.sources[0]?.chunk_id
+      if (!chunkId) return
+      try {
+        await fetch('/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: msg.query, chunk_id: chunkId, relevant }),
+        })
+        messages.value[idx]!.feedback = relevant
+      } catch { /* ignorar errores de red */ }
+    }
+
     return {
       loading,
       messages,
       input,
       chatEl,
       sendQuery,
+      sendFeedback,
     }
   },
 })

@@ -26,8 +26,8 @@ def create_index(index_name: str = "documents"):
 
                 # --- búsqueda híbrida ---
                 "text": {
-                    "type": "text",                 # BM25 / full-text
-                    "analyzer": "standard"
+                    "type": "text",
+                    "analyzer": "spanish"           # tokenización + stopwords + stemming Snowball ES
                 },
                 "text_keyword": {
                     "type": "keyword",              # filtros exactos

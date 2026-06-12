@@ -1,0 +1,434 @@
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\title{Sistema de Generaci\'on Aumentada por Recuperaci\'on para
+Consultas de Turismo Latinoamericano con B\'usqueda H\'ibrida,
+Expansi\'on de Consultas y Fallback Web Autom\'atico}
+
+\titlerunning{Sistema RAG para Turismo Latinoamericano}
+
+\author{Ronald Alfonso}
+\authorrunning{R. Alfonso}
+\institute{Universidad, Sistemas de Recuperaci\'on de Informaci\'on\\
+\email{ronald@bool.mx}}
+
+\maketitle
+
+%-----------------------------------------------------------------------
+\begin{abstract}
+Se presenta un sistema de Generaci\'on Aumentada por Recuperaci\'on
+(RAG) para consultas de turismo en Am\'erica Latina en espa\~nol.
+Combina b\'usqueda h\'ibrida BM25~+~KNN sobre OpenSearch con embeddings
+densos de la API Mistral (1\,024 dimensiones), expansi\'on de consultas
+mediante retroalimentaci\'on de pseudo-relevancia y expansor LLM,
+reordenamiento con \textit{cross-encoder}, posicionamiento multifactor
+con impulso por pa\'is y retroalimentaci\'on expl\'icita del usuario,
+y fallback autom\'atico a Wikivoyage. Se eval\'ua con 30 consultas y
+juicios de relevancia manuales usando MAP, MRR, Precisi\'on, Recall y
+NDCG en $k\in\{5,10,20\}$. El recuperador base logra MAP~=~0{,}550 y
+MRR~=~0{,}887; el pipeline completo obtiene MAP~=~0{,}395 y
+MRR~=~0{,}777 con cobertura robusta ante consultas fuera del \'indice.
+\keywords{Generaci\'on Aumentada por Recuperaci\'on \and B\'usqueda
+H\'ibrida \and Expansi\'on de Consultas \and Reordenamiento \and
+Recuperaci\'on de Informaci\'on Tur\'istica \and OpenSearch}
+\end{abstract}
+
+%-----------------------------------------------------------------------
+\section{Introducci\'on}
+
+La r\'apida proliferaci\'on de modelos de lenguaje de gran escala (LLM)
+ha reavivado el inter\'es por anclar sus salidas en corpus verificados.
+La Generaci\'on Aumentada por Recuperaci\'on (RAG)~\cite{lewis2020rag}
+acopla un generador LLM param\'etrico con un recuperador no param\'etrico,
+produciendo respuestas factualmente fundamentadas sin perder la fluidez
+de la generaci\'on neuronal.
+
+El turismo latinoamericano presenta retos particulares: consultas muy
+espec\'ificas (pa\'ises, ciudades, temporadas, actividades), corpus
+heterog\'eneo y escasez de benchmarks en espa\~nol.
+
+Las contribuciones de este trabajo son:
+\begin{enumerate}
+  \item Arquitectura extremo a extremo de un sistema RAG para turismo
+  latinoamericano, desplegado como microservicios Docker Compose.
+  \item M\'odulo de posicionamiento multifactor: relevancia sem\'antica,
+  impulso por pa\'is detectado y retroalimentaci\'on expl\'icita del
+  usuario como factores de ranking.
+  \item Dos m\'odulos opcionales completos: expansi\'on de consultas
+  (LLM + PRF) y evaluaci\'on cuantitativa con m\'etricas IR.
+  \item Benchmark de 30 consultas en espa\~nol con juicios de relevancia.
+\end{enumerate}
+
+%-----------------------------------------------------------------------
+\section{Trabajo Relacionado}
+\label{sec:related}
+
+\textbf{Fundamentos de RAG.}
+Lewis et al.~\cite{lewis2020rag} introdujeron el paradigma RAG con DPR.
+Asai et al.~\cite{asai2023selfrag} propusieron Self-RAG con tokens de
+cr\'itica para recuperaci\'on selectiva.
+
+\textbf{Recuperaci\'on h\'ibrida.}
+BM25 disperso combinado con b\'usqueda vectorial densa supera a cada
+m\'etodo por separado~\cite{ma2021replication,luan2021sparse}. OpenSearch
+soporta pipelines de puntuaci\'on h\'ibrida nativos.
+
+\textbf{Expansi\'on de consultas.}
+PRF cl\'asico~\cite{rocchio1971relevance} y enfoques modernos con
+LLMs~\cite{gao2022hyde} se combinan en este trabajo.
+
+\textbf{Reordenamiento y RI multiling\"ue.}
+\textit{Cross-encoders} MS-MARCO~\cite{reimers2019sentence} y benchmarks
+como MIRACL~\cite{zhang2023miracl} son la base de comparaci\'on.
+
+%-----------------------------------------------------------------------
+\section{Arquitectura del Sistema}
+\label{sec:architecture}
+
+\subsection{Visi\'on General}
+
+Seis contenedores Docker Compose: \textit{crawler} Scrapy,
+\textit{procesador}, API FastAPI, frontend Vue~3/Quasar, servidor LLM
+Ollama y base de datos vectorial OpenSearch.
+
+\subsection{Ingesta de Datos}
+
+El crawler recopila art\'iculos de turismo latinoamericano. Un script
+offline procesa el volcado XML de Wikivoyage en espa\~nol, filtrando
+art\'iculos de Am\'erica Latina y el Caribe por coincidencia de pa\'is
+en t\'itulo, categor\'ias y texto, con lista de bloqueo para otras regiones.
+
+\subsection{Procesamiento e Indexaci\'on}
+
+El texto se segmenta en \textit{chunks} de~512 tokens con solapamiento
+de~50. El \'indice OpenSearch configura el analizador \texttt{spanish}
+(tokenizaci\'on, \textit{stopwords} del espa\~nol y \textit{stemming}
+Snowball) sobre el campo BM25. En paralelo, cada \textit{chunk} se
+representa con \texttt{mistral-embed} (1\,024 dimensiones, L2) para
+b\'usqueda KNN con HNSW ($m=16$, $ef\_\mathrm{construction}=128$,
+similitud coseno).
+
+\subsection{Pipeline de Recuperaci\'on}
+
+\textbf{Control de dominio.} Clasificador LLM que bloquea el fallback
+web para consultas fuera del dominio tur\'istico.
+
+\textbf{Detecci\'on de pa\'is.} Detector basado en reglas para~70 alias
+de pa\'ises. El pa\'is detectado se usa como factor de impulso en el
+ranking, no como filtro duro.
+
+\textbf{Expansi\'on de consultas.} Expansor LLM (paraf\'raseo) + PRF
+(reponderaci\'on de t\'erminos con top-$k$ resultados). Configurables
+y combinables.
+
+\textbf{B\'usqueda h\'ibrida.}
+$s_{\text{hybrid}} = \alpha\,\hat{s}_{\text{BM25}} +
+(1{-}\alpha)\,\hat{s}_{\text{KNN}}$.
+
+\textbf{M\'odulo de posicionamiento multifactor.}
+\begin{equation}
+  R(q,d) = s_{\text{hybrid}}(q,d)
+           \times b_{\text{pa\'is}}(q,d)
+           \times b_{\text{feedback}}(d)
+  \label{eq:ranking}
+\end{equation}
+$b_{\text{pa\'is}}=1{,}5$ si el pa\'is de la consulta coincide con el
+del documento (1 si no), $b_{\text{feedback}}=1{,}2$ si el documento
+tiene retroalimentaci\'on positiva registrada (1 si no calificado).
+Con reordenamiento, $s_{\text{hybrid}}$ se sustituye por la puntuaci\'on
+del \textit{cross-encoder}
+(\texttt{ms-marco-MiniLM-L-6-v2}).
+
+\textbf{Fallback web.} Cascada: \'indice principal $\to$ cach\'e web $\to$
+Wikivoyage en vivo. Se activa cuando el \'indice principal devuelve
+menos de un umbral m\'inimo de resultados.
+
+\subsection{Retroalimentaci\'on Expl\'icita del Usuario}
+
+La interfaz incluye botones \textit{\'util} / \textit{no \'util} bajo
+cada respuesta. Al hacer clic se invoca \texttt{POST /feedback}, que
+crea el \'indice \texttt{feedback} en OpenSearch si no existe y
+persiste la tupla $(consulta,\allowbreak\;chunk\_id,\allowbreak\;relevante)$.
+El factor $b_{\text{feedback}}$ de la Ec.~\ref{eq:ranking} se aplica
+en tiempo real a b\'usquedas futuras. El proxy del servidor de
+desarrollo Quasar redirige \texttt{/feedback} al backend en el puerto
+8000, de forma an\'aloga a las rutas \texttt{/ask} y \texttt{/health}.
+
+\subsection{Generaci\'on de Respuestas}
+
+El top-$k$ de \textit{chunks} con citas se pasa a Ollama
+(\texttt{qwen2.5:3b}). La API expone \texttt{/ask} s\'incrono y
+\texttt{/ask/stream} SSE.
+
+%-----------------------------------------------------------------------
+\section{Configuraci\'on Experimental}
+\label{sec:evaluation}
+
+\subsection{Colecci\'on de Prueba}
+
+30 consultas en espa\~nol sobre turismo latinoamericano (playas,
+gastronom\'ia, senderismo, sitios culturales, seguridad, transporte)
+en~15 pa\'ises. Juicios de relevancia binarios por pooling top-20.
+
+\subsection{Configuraciones}
+
+\textbf{Baseline} (h\'ibrido puro), \textbf{Expansion} (+LLM+PRF),
+\textbf{Reranking} (+\textit{cross-encoder}),
+\textbf{Expansion+Reranking} y \textbf{Full Pipeline}.
+
+\subsection{M\'etricas}
+
+MAP, MRR, P@$k$, R@$k$, NDCG@$k$ para $k\in\{5,10,20\}$.
+
+%-----------------------------------------------------------------------
+\section{Resultados y Discusi\'on}
+\label{sec:results}
+
+\begin{table}[t]
+\centering
+\caption{MAP y MRR (30 consultas). Negrita: mejor valor.}
+\label{tab:main}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Configuraci\'on} & \textbf{MAP} & \textbf{MRR} \\
+\midrule
+Baseline              & \textbf{0{,}550} & \textbf{0{,}887} \\
+Expansion             & 0{,}393          & 0{,}737          \\
+Reranking             & 0{,}384          & 0{,}667          \\
+Expansion+Reranking   & 0{,}350          & 0{,}739          \\
+Full Pipeline         & 0{,}395          & 0{,}777          \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{P@$k$ y R@$k$. Negrita: mejor por columna.}
+\label{tab:prk}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcccccc}
+\toprule
+\multirow{2}{*}{\textbf{Configuraci\'on}}
+  & \multicolumn{3}{c}{\textbf{P@k}} & \multicolumn{3}{c}{\textbf{R@k}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+  & @5 & @10 & @20 & @5 & @10 & @20 \\
+\midrule
+Baseline            & \textbf{0{,}620} & \textbf{0{,}487} & \textbf{0{,}307} & \textbf{0{,}380} & \textbf{0{,}601} & \textbf{0{,}750} \\
+Expansion           & 0{,}533 & 0{,}400 & 0{,}253 & 0{,}317 & 0{,}479 & 0{,}597 \\
+Reranking           & 0{,}400 & 0{,}373 & 0{,}300 & 0{,}208 & 0{,}401 & 0{,}747 \\
+Expansion+Reranking & 0{,}440 & 0{,}387 & 0{,}253 & 0{,}243 & 0{,}431 & 0{,}584 \\
+Full Pipeline       & 0{,}547 & 0{,}403 & 0{,}253 & 0{,}326 & 0{,}473 & 0{,}582 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{NDCG@$k$. Negrita: mejor valor.}
+\label{tab:ndcg}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Configuraci\'on} & \textbf{@5} & \textbf{@10} & \textbf{@20} \\
+\midrule
+Baseline            & \textbf{0{,}688} & \textbf{0{,}664} & \textbf{0{,}704} \\
+Expansion           & 0{,}563 & 0{,}519 & 0{,}540 \\
+Reranking           & 0{,}443 & 0{,}451 & 0{,}580 \\
+Expansion+Reranking & 0{,}491 & 0{,}490 & 0{,}519 \\
+Full Pipeline       & 0{,}584 & 0{,}511 & 0{,}540 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El baseline domina en MAP y MRR. La expansi\'on LLM introduce ruido en
+un dominio especializado; el \textit{cross-encoder} ingl\'es degrada el
+reordenamiento sobre contenido espa\~nol. El Full Pipeline es
+arquitect\'onicamente superior para producci\'on: gestiona consultas sin
+cobertura, aplica posicionamiento multifactor y recoge retroalimentaci\'on
+del usuario.
+
+%-----------------------------------------------------------------------
+\section{Manual de Usuario}
+\label{sec:manual}
+
+\subsection{Acceso}
+
+Con el sistema activo (\texttt{docker compose up -d}), acceder a
+\url{http://localhost:9000} desde cualquier navegador. No requiere
+registro.
+
+\subsection{Descripci\'on de la Interfaz}
+
+La interfaz consta de tres zonas:
+\begin{enumerate}
+  \item \textbf{\'Area de conversaci\'on}: historial de preguntas y
+  respuestas en formato chat. Cada respuesta del asistente muestra el
+  texto generado en tiempo real (efecto de escritura token a token) y,
+  al finalizar, un chip con el pa\'is detectado si corresponde.
+  \item \textbf{Panel de fuentes} (expandible): lista los fragmentos del
+  corpus usados, con puntuaci\'on de relevancia, t\'itulo y enlace a la
+  p\'agina original. Los fragmentos se ordenan de mayor a menor
+  relevancia seg\'un la funci\'on $R(q,d)$ de la Ec.~\ref{eq:ranking}.
+  \item \textbf{Barra de entrada}: campo de texto en la parte inferior
+  con bot\'on de env\'io.
+\end{enumerate}
+
+\subsection{C\'omo Realizar una Consulta}
+
+\begin{enumerate}
+  \item Escribir la pregunta en lenguaje natural en espa\~nol, por
+  ejemplo: \textit{``¿Qu\'e playas hay en Colombia?''} o
+  \textit{``¿Qu\'e ver en Cusco en julio?''}.
+  \item Presionar \textit{Enter} o el bot\'on de env\'io.
+  \item Esperar la respuesta. El chip de pa\'is confirma si el sistema
+  detect\'o un filtro geogr\'afico; el panel de fuentes muestra de d\'onde
+  proviene la informaci\'on.
+\end{enumerate}
+
+\subsection{Retroalimentaci\'on al Sistema}
+
+Bajo cada respuesta aparecen dos botones: \textbf{\'Util} y
+\textbf{No \'util}. Hacer clic en uno env\'ia la valoraci\'on al endpoint
+\texttt{POST /feedback}. El bot\'on seleccionado se resalta para confirmar
+el registro. Esta retroalimentaci\'on mejora el posicionamiento de
+documentos similares en consultas futuras mediante el factor
+$b_{\text{feedback}}$.
+
+\subsection{Posicionamiento de Resultados}
+
+Los resultados se ordenan considerando: (1)~relevancia sem\'antica
+(embeddings Mistral + BM25 con analizador espa\~nol), (2)~correspondencia
+de pa\'is (impulso $\times 1{,}5$ para documentos del pa\'is mencionado),
+y (3)~retroalimentaci\'on positiva previa ($\times 1{,}2$). Las fuentes
+en el panel expandible reflejan ese mismo orden.
+
+%-----------------------------------------------------------------------
+\section{Opini\'on Cr\'itica del Sistema}
+\label{sec:critica}
+
+\subsection{Bondades}
+
+\begin{itemize}
+  \item \textbf{Arquitectura modular y reproducible.} Cada componente
+  corre en un contenedor Docker independiente; el sistema completo se
+  levanta con un solo comando y puede reproducirse en cualquier m\'aquina
+  con Docker instalado.
+  \item \textbf{B\'usqueda h\'ibrida efectiva.} La combinaci\'on de BM25
+  con analizador \texttt{spanish} y KNN denso cubre tanto la coincidencia
+  l\'exica como la similitud sem\'antica, compensando las limitaciones de
+  cada enfoque por separado.
+  \item \textbf{Cobertura din\'amica.} El fallback de tres niveles
+  garantiza una respuesta aunque el \'indice principal est\'e vac\'io:
+  primero busca en cach\'e web y finalmente consulta Wikivoyage en vivo,
+  indexando el resultado para reutilizaci\'on futura.
+  \item \textbf{Posicionamiento multifactor.} El ranking incorpora
+  relevancia sem\'antica, impulso geogr\'afico y retroalimentaci\'on
+  expl\'icita del usuario, superando el enfoque de relevancia pura.
+  \item \textbf{M\'odulos opcionales funcionales.} Expansi\'on de
+  consultas (LLM + PRF) y evaluaci\'on cuantitativa est\'an completamente
+  implementados e integrados en el pipeline.
+\end{itemize}
+
+\subsection{Insuficiencias y C\'omo Solventarlas}
+
+\begin{itemize}
+  \item \textbf{\textit{Cross-encoder} en ingl\'es sobre contenido
+  espa\~nol.} El modelo \texttt{ms-marco-MiniLM-L-6-v2} fue entrenado
+  sobre consultas inglesas, lo que degrada su puntuaci\'on de relevancia
+  sobre texto en espa\~nol. \textit{Soluci\'on}: ajustar un
+  \textit{cross-encoder} sobre pares consulta-documento tur\'isticos en
+  espa\~nol, o usar \texttt{cross-encoder/mmarco-mMiniLMv2-L12-H384},
+  variante multiling\"ue del mismo modelo.
+  \item \textbf{Expansi\'on LLM de dominio abierto introduce ruido.}
+  El expansor LLM genera par\'afrasis sin restricci\'on de dominio,
+  desplazando el centroide sem\'antico de la consulta. \textit{Soluci\'on}:
+  incluir un prompt con ejemplos de consultas tur\'isticas para acotar
+  el espacio de expansi\'on.
+  \item \textbf{Retroalimentaci\'on no actualiza el \'indice vectorial.}
+  El factor $b_{\text{feedback}}$ impulsa documentos en tiempo de
+  b\'usqueda pero no actualiza los embeddings del corpus. \textit{Soluci\'on}:
+  implementar un ciclo de reindexaci\'on peri\'odico que pondere los
+  embeddings de documentos con alta valoraci\'on positiva.
+  \item \textbf{Popularidad y frescura no consideradas.} El m\'odulo de
+  posicionamiento no incorpora popularidad del destino ni frescura del
+  documento. \textit{Soluci\'on}: agregar factores $b_{\text{frescura}}$
+  basados en \texttt{created\_at} y $b_{\text{popularidad}}$ basado en
+  frecuencia de aparici\'on en resultados positivos.
+  \item \textbf{Sin m\'odulo multimodal.} El sistema procesa
+  \'unicamente texto. \textit{Soluci\'on}: integrar embeddings de
+  im\'agenes con CLIP para recuperaci\'on por foto de destino,
+  almacen\'andolos como vectores adicionales en el mismo \'indice HNSW.
+\end{itemize}
+
+%-----------------------------------------------------------------------
+\section{Conclusiones}
+\label{sec:conclusions}
+
+Se present\'o un sistema RAG extremo a extremo para turismo latinoamericano
+con \'indice h\'ibrido OpenSearch, analizador espa\~nol para BM25,
+embeddings Mistral y pipeline modular. El m\'odulo de posicionamiento
+combina relevancia, impulso geogr\'afico y retroalimentaci\'on del
+usuario. Se implementaron dos m\'odulos opcionales completos: expansi\'on
+de consultas y evaluaci\'on cuantitativa.
+
+El baseline h\'ibrido domina en precisi\'on (MAP~=~0{,}550,
+P@5~=~0{,}620); el Full Pipeline aporta cobertura robusta
+(MAP~=~0{,}395, MRR~=~0{,}777). La principal l\'inea de mejora es ajustar
+el \textit{cross-encoder} al dominio tur\'istico en espa\~nol.
+
+%-----------------------------------------------------------------------
+\bibliographystyle{splncs04}
+\begin{thebibliography}{10}
+
+\bibitem{lewis2020rag}
+Lewis, P., et al.: Generaci\'on aumentada por recuperaci\'on para tareas
+de PLN. En: NeurIPS, vol.~33, pp.~9459--9474 (2020)
+
+\bibitem{asai2023selfrag}
+Asai, A., et al.: Self-RAG: Aprendiendo a recuperar y criticar.
+arXiv:2310.11511 (2023)
+
+\bibitem{ma2021replication}
+Ma, X., et al.: Estudio de replicaci\'on del DPR. arXiv:2104.05740 (2021)
+
+\bibitem{luan2021sparse}
+Luan, Y., et al.: Representaciones dispersas, densas y de atenci\'on.
+TACL \textbf{9}, 329--345 (2021)
+
+\bibitem{rocchio1971relevance}
+Rocchio, J.J.: Retroalimentaci\'on de relevancia. En: SMART Retrieval
+System, pp.~313--323. Prentice-Hall (1971)
+
+\bibitem{gao2022hyde}
+Gao, L., et al.: Recuperaci\'on densa de cero disparos.
+arXiv:2212.10496 (2022)
+
+\bibitem{naseri2021ceqe}
+Naseri, S., et al.: CEQE: Embeddings para expansi\'on de consultas.
+En: ECIR 2021, pp.~467--482 (2021)
+
+\bibitem{reimers2019sentence}
+Reimers, N., Gurevych, I.: Sentence-BERT. En: EMNLP 2019,
+pp.~3982--3992 (2019)
+
+\bibitem{zhang2023miracl}
+Zhang, X., et al.: MIRACL: Dataset multiling\"ue. TACL \textbf{11},
+1114--1131 (2023)
+
+\bibitem{robertson2009bm25}
+Robertson, S., Zaragoza, H.: BM25 y m\'as all\'a. FTIR \textbf{3}(4),
+333--389 (2009)
+
+\end{thebibliography}
+
+\end{document}
